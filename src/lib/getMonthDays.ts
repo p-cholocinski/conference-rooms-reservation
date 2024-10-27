@@ -4,7 +4,7 @@ export default function getMonthDays(date: Date): calendarDay[] {
   const todayDate: Date = new Date()
   date = new Date(date.setDate(date.getDate() - date.getDay() + 1))
 
-  let monthDays: calendarDay[] = []
+  const monthDays: calendarDay[] = []
   let currMonth: boolean
   let currDay: boolean
 
