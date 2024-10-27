@@ -5,7 +5,7 @@ export default function Navbar() {
   return (
     <nav className="bg-neutral-600 sticky top-0 p-4 shadow-[0px_0px_4px_1px] shadow-neutral-200">
       <div className="md:px-6 mx-auto flex justify-between flex-row">
-        <h1 className="text-3xl font-bold text-neutral-200 flex">
+        <h1 className="text-xl font-bold text-neutral-200 flex sm:text-2xl md:text-3xl">
           <Link href="/" className="no-underline flex flex-row gap-3 items-center hover:text-neutral-50">
             Conference Rooms Reservation
           </Link>
