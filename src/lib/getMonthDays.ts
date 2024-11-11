@@ -1,10 +1,10 @@
-export default function getMonthDays(date: Date): calendarDay[] {
+export default function getMonthDays(date: Date): CalendarDay[] {
   const dateYear: number = date.getFullYear()
   const dateMonth: number = date.getMonth()
   const todayDate: Date = new Date()
   date = new Date(date.setDate(date.getDate() - date.getDay() + 1))
 
-  const monthDays: calendarDay[] = []
+  const monthDays: CalendarDay[] = []
   let currMonth: boolean
   let currDay: boolean
 

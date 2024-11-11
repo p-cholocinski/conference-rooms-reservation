@@ -1,16 +1,16 @@
-type calendarDay = {
+type CalendarDay = {
   date?: string,
   dayNumber: number,
   currentMonth: boolean,
   currentDay: boolean,
 }
 
-type location = {
+type Place = {
   id: string,
   name: string,
 }
 
-type room = {
+type Room = {
   id: string,
   name: string,
   description: string,
@@ -20,7 +20,7 @@ type room = {
   }[],
   params: {
     param: string,
-    value: string,
+    value: string | boolean,
   }[],
   location: string,
 }

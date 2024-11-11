@@ -3,7 +3,7 @@ import OneDay from "./OneDay";
 import WeekRow from "./WeekRow";
 
 export default function CalendarMonth() {
-  const monthDays: calendarDay[] = getMonthDays(new Date("2024-10-01"))
+  const monthDays: CalendarDay[] = getMonthDays(new Date("2024-11-01"))
 
   return (
     <div className="my-4 mx-2 h-full pb-16">

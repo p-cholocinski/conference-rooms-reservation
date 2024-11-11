@@ -7,7 +7,7 @@ export default function PeriodChange() {
         <MdArrowLeft />
       </button>
       <div className="bg-neutral-500 text-sm font-bold border-x border-neutral-400 w-full h-full flex items-center justify-center">
-        Październik 2024
+        Listopad 2024
       </div>
       <button className="h-full text-3xl hover:*:scale-125">
         <MdArrowRight />

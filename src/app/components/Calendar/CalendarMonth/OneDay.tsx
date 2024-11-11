@@ -1,4 +1,4 @@
-export default function OneDay({ dayNumber, currentMonth, currentDay }: calendarDay) {
+export default function OneDay({ dayNumber, currentMonth, currentDay }: CalendarDay) {
   return (
     <div className="p-[2px] border border-neutral-400 rounded-md hover:shadow-[0px_0px_4px_1px] hover:shadow-neutral-200 hover:cursor-pointer hover:scale-105">
       <div

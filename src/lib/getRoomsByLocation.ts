@@ -1,5 +1,5 @@
-export default function getRoomsByLocation(rooms: room[], locationId: string): room[] {
-  const outRooms: room[] = rooms.filter((room) => (
+export default function getRoomsByLocation(rooms: Room[], locationId: string): Room[] {
+  const outRooms: Room[] = rooms.filter((room) => (
     room.location === locationId
   ))
 
