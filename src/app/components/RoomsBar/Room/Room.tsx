@@ -1,6 +1,6 @@
 import getMainPicturePath from "@/lib/getMainPicturePath"
 import Image from "next/image"
-import RoomCard from "./RoomCard"
+import RoomCard from "./RoomCard/RoomCard"
 import { useState } from "react"
 import { MdArrowRight } from "react-icons/md"
 import { useCardHookedContext } from "../RoomsBar"
