@@ -13,6 +13,10 @@ export default function Location({ id, name }: Place) {
         {
           path: "/images/room-1.jpg",
           main: true,
+        },
+        {
+          path: "/images/room-1-a.jpg",
+          main: false,
         }
       ],
       params: [

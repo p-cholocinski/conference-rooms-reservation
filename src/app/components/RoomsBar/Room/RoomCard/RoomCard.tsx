@@ -12,7 +12,7 @@ export default function RoomCard({ visible, room }: Props) {
 
   return (
     <div
-      className={`${visible ? 'absolute ' : 'hidden '}top-4 w-[36rem] left-[102%] rounded-lg shadow-[0px_0px_2px_1px] shadow-neutral-200 cursor-auto`}>
+      className={`${visible ? 'absolute ' : 'hidden '}top-4 w-[36rem] left-[102%] rounded-lg shadow-[0px_0px_2px_1px] shadow-neutral-200 cursor-default`}>
       <div className="bg-neutral-600 px-4 py-2 font-bold text-2xl rounded-t-lg">
         {name}
       </div>

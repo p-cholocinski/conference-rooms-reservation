@@ -1,4 +1,4 @@
-import getMainPicturePath from "@/lib/getMainPicturePath"
+import { getMainPicturePath } from "@/lib/getPicturePath"
 import Image from "next/image"
 import RoomCard from "./RoomCard/RoomCard"
 import { useState } from "react"
