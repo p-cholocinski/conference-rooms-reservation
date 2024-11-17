@@ -35,15 +35,15 @@ export default function Room({ room }: Props) {
           className="w-auto h-auto rounded-md shadow-[0px_0px_2px_1px] shadow-neutral-500"
           src={mainPicturePath}
           alt={name}
-          width={75}
-          height={75}
+          width={640}
+          height={640}
         />
       </div>
       <div className="w-7/12 text-sm">
         {name}
       </div>
       <div
-        className={`w-1/12 h-full text-xl content-center rounded-r-md${isCardVisible || isCardHooked ? ' bg-neutral-800 *:scale-125' : ''}${isAnyCardHooked && !isCardHooked ? ' invisible' : ''}`}
+        className={`${isAnyCardHooked && !isCardHooked ? 'invisible ' : ''}w-1/12 h-full text-xl content-center rounded-r-md${isCardVisible || isCardHooked ? ' bg-neutral-800 *:scale-125 ' : ''}${!isCardHooked ? ' scale-90' : ''}`}
         onMouseEnter={() => setIsCardVisible(true)}
         onMouseLeave={() => setIsCardVisible(false)}
         onClick={toogleArrowClicked}>

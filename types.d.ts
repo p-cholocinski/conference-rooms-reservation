@@ -24,3 +24,8 @@ type Room = {
   }[],
   location: string,
 }
+
+type CalendarTypes = {
+  id: string,
+  name: string,
+}
