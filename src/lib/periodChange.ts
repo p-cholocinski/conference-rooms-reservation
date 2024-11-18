@@ -1,21 +1,17 @@
-export function getPrevPeriod(currentPeriod: Date) {
+export function getPrevPeriod(currentPeriod: Date, calendarTypeId: CalendarTypes["id"]) {
   const prevPeriod =
-    new Date(
-      currentPeriod.getFullYear(),
-      currentPeriod.getMonth() - 1,
-      1
-    )
+    calendarTypeId === "month"
+      ? new Date(currentPeriod.getFullYear(), currentPeriod.getMonth() - 1, 1)
+      : new Date(currentPeriod.getFullYear(), currentPeriod.getMonth(), currentPeriod.getDate() - 7)
 
   return prevPeriod
 }
 
-export function getNextPeriod(currentPeriod: Date) {
+export function getNextPeriod(currentPeriod: Date, calendarTypeId: CalendarTypes["id"]) {
   const nextPeriod =
-    new Date(
-      currentPeriod.getFullYear(),
-      currentPeriod.getMonth() + 1,
-      1
-    )
+    calendarTypeId === "month"
+      ? new Date(currentPeriod.getFullYear(), currentPeriod.getMonth() + 1, 1)
+      : new Date(currentPeriod.getFullYear(), currentPeriod.getMonth(), currentPeriod.getDate() + 7)
 
   return nextPeriod
 }

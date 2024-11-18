@@ -37,7 +37,7 @@ export const useCalendarTypeContext = () => {
 
 export default function Calendar() {
   const [calendarPeriod, setCalendarPeriod] = useState(new Date())
-  const [calendarType, setCalendarType] = useState({ id: "week", name: "Tygodniowy" })
+  const [calendarType, setCalendarType] = useState({ id: "month", name: "Miesięczny", daysCount: 42 })
 
   return (
     <CalendarPeriodContext.Provider value={{ calendarPeriod, setCalendarPeriod }}>
@@ -52,7 +52,8 @@ export default function Calendar() {
               ? <CalendarWeek />
               : calendarType.id === "month"
                 ? <CalendarMonth />
-                : ''}
+                : ''
+            }
           </div>
         </div>
       </CalendarTypeContext.Provider>

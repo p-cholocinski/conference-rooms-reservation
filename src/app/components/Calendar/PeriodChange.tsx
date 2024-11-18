@@ -1,10 +1,11 @@
 import { MdArrowLeft, MdArrowRight } from "react-icons/md"
-import { useCalendarPeriodContext } from "./Calendar"
+import { useCalendarPeriodContext, useCalendarTypeContext } from "./Calendar"
 import { getNextPeriod, getPrevPeriod } from "@/lib/periodChange"
 import { useFormatter } from "next-intl"
 
 export default function PeriodChange() {
   const { calendarPeriod, setCalendarPeriod } = useCalendarPeriodContext()
+  const { calendarType } = useCalendarTypeContext()
 
   const format = useFormatter()
 
@@ -26,7 +27,7 @@ export default function PeriodChange() {
     <div className="bg-neutral-600 w-64 flex flex-row items-center border border-neutral-400 rounded-2xl">
       <button
         className="h-full text-3xl hover:*:scale-125"
-        onClick={() => setCalendarPeriod(getPrevPeriod(calendarPeriod))}>
+        onClick={() => setCalendarPeriod(getPrevPeriod(calendarPeriod, calendarType.id))}>
         <MdArrowLeft />
       </button>
       <div
@@ -37,7 +38,7 @@ export default function PeriodChange() {
       </div>
       <button
         className="h-full text-3xl hover:*:scale-125"
-        onClick={() => setCalendarPeriod(getNextPeriod(calendarPeriod))}>
+        onClick={() => setCalendarPeriod(getNextPeriod(calendarPeriod, calendarType.id))}>
         <MdArrowRight />
       </button>
     </div>

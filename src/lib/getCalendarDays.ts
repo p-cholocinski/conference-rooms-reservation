@@ -1,10 +1,10 @@
-export default function getMonthDays(date: Date): CalendarDay[] {
-  const data = getData(date)
+export default function getCalendarDays(date: Date, calendarType: CalendarTypes): CalendarDay[] {
+  const data = getData(date, calendarType.id)
 
   const monthDays: CalendarDay[] = []
-  const nextDay: Date = getWeekMonday(data.firstMonthDay)
+  const nextDay: Date = getWeekMonday(data.startDate)
 
-  for (let d: number = 1; d <= 42; d++) {
+  for (let d: number = 1; d <= calendarType.daysCount; d++) {
 
     monthDays.push({
       date: new Date(nextDay).toLocaleDateString(),
@@ -19,13 +19,16 @@ export default function getMonthDays(date: Date): CalendarDay[] {
   return monthDays
 }
 
-function getData(date: Date) {
-  const firstMonthDay: Date = new Date(date.getFullYear(), date.getMonth(), 1)
-  const year: number = firstMonthDay.getFullYear()
-  const month: number = firstMonthDay.getMonth()
+function getData(date: Date, calendarTypeId: CalendarTypes["id"]) {
+  const startDate: Date =
+    calendarTypeId === "month"
+      ? new Date(date.getFullYear(), date.getMonth(), 1)
+      : new Date(date)
+  const year: number = startDate.getFullYear()
+  const month: number = startDate.getMonth()
   const today: Date = new Date()
 
-  const data = { firstMonthDay, year, month, today }
+  const data = { startDate, year, month, today }
 
   return data
 }

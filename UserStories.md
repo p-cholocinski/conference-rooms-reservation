@@ -9,22 +9,22 @@
 3. [ ] Po zalogowaniu odrazu wyświetlony jest kalendarz 5 dniowy z aktualnym tygodniem i domyślną salą konferencyjną,
 
 ## Strona główna:
-1. [ ] Dostępne mają być dwa kalendarze: tygodniowy i miesięczny,
+1. [x] Dostępne mają być dwa kalendarze: tygodniowy i miesięczny,
 ### Kalendarz miesięczny:
 1. [ ] W widoku miesięcznym pokazać kafelki rezerwacji lub procentową zajętość sali w danym dniu,
 2. [ ] Po kliknięciu w dany dzień, zostajemy przekierowani do widoku tygodniowego,
-3. [ ] Możliwość przełączenia się pomiędzy miesiącami,
+3. [x] Możliwość przełączenia się pomiędzy miesiącami,
 ### Kalendarz tygodniowy:
-1. [ ] Pokazane godziny i dni tygodnia (nr dnia - dzień słownie),
+1. [x] Pokazane godziny i dni tygodnia (nr dnia - dzień słownie),
 2. [ ] Rezerwacja w formie kafelkowej rozlewa się w danym dniu w wybranych godzinach,
 3. [ ] Możliwość zaznaczenia na kalendarzu godzin w których chcemy dokonać rezerwacji,
 4. [ ] Na kafelku rezerwacji wyświetlana jest godzina, kategoria oraz opis rezerwacji,
-5. [ ] Możliwość przełączenia się pomiędzy tygodniami,
+5. [x] Możliwość przełączenia się pomiędzy tygodniami,
 ### Wybór sali konferencyjnej:
-1. [ ] Panel boczny w którym wyświetlone są wszystkie sale z podziałem na budynki,
-2. [ ] Sala powinna być wyświetlona z miniaturką zdjęcia,
-3. [ ] Po najechaniu na sale, z opóźnieniem, powinna wyświetlić się karta sali ze zdjęciem głównym,
-4. [ ] Ponieważ sal może być dużo, panel boczny powinien mieć możliwość oddzielnego scrollowania,
+1. [x] Panel boczny w którym wyświetlone są wszystkie sale z podziałem na budynki,
+2. [x] Sala powinna być wyświetlona z miniaturką zdjęcia,
+3. [x] Po najechaniu na sale, z opóźnieniem, powinna wyświetlić się karta sali ze zdjęciem głównym,
+4. [x] Ponieważ sal może być dużo, panel boczny powinien mieć możliwość oddzielnego scrollowania,
 5. [ ] W wersji mobilnej panel boczny rozwijany jest za pomocą przycisku,
 
 ## Dodawanie rezerwacji:

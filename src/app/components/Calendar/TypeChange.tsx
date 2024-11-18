@@ -1,4 +1,4 @@
-import { getCalendarTypeById } from "@/lib/calendarType"
+import { getCalendarTypeById } from "@/lib/typeChange"
 import { useCalendarTypeContext } from "./Calendar"
 
 export default function TypeChange() {
@@ -8,10 +8,12 @@ export default function TypeChange() {
     {
       id: "week",
       name: "Tygodniowy",
+      daysCount: 7,
     },
     {
       id: "month",
       name: "Miesięczny",
+      daysCount: 42,
     },
   ]
 

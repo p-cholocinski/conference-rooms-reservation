@@ -27,7 +27,7 @@ export default function Room({ room }: Props) {
 
   return (
     <div
-      className="h-20 pl-2 items-center flex gap-2 rounded-md hover:bg-neutral-700 hover:cursor-pointer"
+      className={`h-20 pl-2 items-center flex gap-2 rounded-md hover:cursor-pointer hover:bg-neutral-700`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}>
       <div className="w-4/12">

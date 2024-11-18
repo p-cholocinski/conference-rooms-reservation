@@ -28,4 +28,5 @@ type Room = {
 type CalendarTypes = {
   id: string,
   name: string,
+  daysCount: number,
 }

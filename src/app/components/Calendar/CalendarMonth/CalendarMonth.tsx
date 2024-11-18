@@ -1,16 +1,17 @@
-import getMonthDays from "@/lib/getMonthDays";
+import getCalendarDays from "@/lib/getCalendarDays";
 import OneDay from "./OneDay";
 import WeekRow from "../WeekRow";
-import { useCalendarPeriodContext } from "../Calendar";
+import { useCalendarPeriodContext, useCalendarTypeContext } from "../Calendar";
 import { useEffect, useState } from "react";
 
 export default function CalendarMonth() {
   const { calendarPeriod } = useCalendarPeriodContext()
+  const { calendarType } = useCalendarTypeContext()
 
   const [monthDays, setMonthDays] = useState<CalendarDay[] | undefined>(undefined)
 
   useEffect(() => {
-    const monthDays = getMonthDays(calendarPeriod)
+    const monthDays = getCalendarDays(calendarPeriod, calendarType)
     setMonthDays(monthDays)
   }, [calendarPeriod])
 
