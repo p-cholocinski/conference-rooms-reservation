@@ -1,7 +1,8 @@
 import { MdArrowLeft, MdArrowRight } from "react-icons/md"
-import { useCalendarPeriodContext, useCalendarTypeContext } from "./Calendar"
 import { getNextPeriod, getPrevPeriod } from "@/lib/periodChange"
 import { useFormatter } from "next-intl"
+import { useCalendarPeriodContext } from "../context/CalendarPeriodContext"
+import { useCalendarTypeContext } from "../context/CalendarTypeContext"
 
 export default function PeriodChange() {
   const { calendarPeriod, setCalendarPeriod } = useCalendarPeriodContext()

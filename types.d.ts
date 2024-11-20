@@ -30,3 +30,12 @@ type CalendarTypes = {
   name: string,
   daysCount: number,
 }
+
+type Reservation = {
+  dateFrom: Date,
+  dateTo: Date,
+  category: string,
+  roomId: string,
+  description: string,
+  userId: string,
+}

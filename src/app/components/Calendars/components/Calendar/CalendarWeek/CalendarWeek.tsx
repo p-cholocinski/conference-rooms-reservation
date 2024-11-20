@@ -1,20 +1,12 @@
-import { useEffect, useState } from "react";
-import WeekRow from "../WeekRow";
+import WeekRow from "../../WeekRow";
 import Hours from "./Hours";
 import ReservationArea from "./Reservations";
-import { useCalendarPeriodContext, useCalendarTypeContext } from "../Calendar";
-import getCalendarDays from "@/lib/getCalendarDays";
 
-export default function CalendarWeek() {
-  const { calendarPeriod } = useCalendarPeriodContext()
-  const { calendarType } = useCalendarTypeContext()
+type Props = {
+  calendarDays: CalendarDay[]
+}
 
-  const [weekDays, setWeekDays] = useState<CalendarDay[] | undefined>(undefined)
-
-  useEffect(() => {
-    const weekDays = getCalendarDays(calendarPeriod, calendarType)
-    setWeekDays(weekDays)
-  }, [calendarPeriod])
+export default function CalendarWeek({ calendarDays }: Props) {
 
   return (
     <div className="my-4 mx-2 h-full pb-24">
@@ -23,7 +15,7 @@ export default function CalendarWeek() {
         <div className="w-full">
           <WeekRow />
           <div className="grid grid-cols-7 text-center">
-            {weekDays?.map((weekDay) => (
+            {calendarDays?.map((weekDay) => (
               <div key={weekDay.date}>{weekDay.dayNumber}</div>
             ))}
           </div>

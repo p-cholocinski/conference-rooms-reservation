@@ -1,12 +1,17 @@
+'use client'
+
 import RoomsBar from "./components/RoomsBar/RoomsBar"
-import Calendar from "./components/Calendar/Calendar"
+import Calendar from "./components/Calendars/Calendars"
+import { SelectedRoomContextProvider } from "./context/SelectedRoomContext"
 
 export default function Home() {
 
   return (
     <>
-      <RoomsBar />
-      <Calendar />
+      <SelectedRoomContextProvider>
+        <RoomsBar />
+        <Calendar />
+      </SelectedRoomContextProvider>
     </>
   )
 }

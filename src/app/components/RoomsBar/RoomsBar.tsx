@@ -1,22 +1,5 @@
-'use client'
-
-import { createContext, useContext, useState } from "react";
 import Location from "./Location/Location";
-
-type CardHookedContextType = {
-  isAnyCardHooked: boolean,
-  setIsAnyCardHooked: React.Dispatch<React.SetStateAction<boolean>>,
-}
-
-const CardHookedContext = createContext<CardHookedContextType | undefined>(undefined)
-
-export const useCardHookedContext = () => {
-  const context = useContext(CardHookedContext)
-  if (!context) {
-    throw new Error("useCardHookedContext error")
-  }
-  return context
-}
+import { CardHookedContextProvider } from "./context/CardHookedContext";
 
 export default function RoomsBar() {
 
@@ -31,10 +14,8 @@ export default function RoomsBar() {
     }
   ]
 
-  const [isAnyCardHooked, setIsAnyCardHooked] = useState(false)
-
   return (
-    <CardHookedContext.Provider value={{ isAnyCardHooked, setIsAnyCardHooked }}>
+    <CardHookedContextProvider>
       <aside className="fixed left-0 w-80 h-full pt-4 pb-24 transition-transform -translate-x-full z-10 md:translate-x-0">
         <div id="rooms-bar" className="bg-neutral-600 h-full py-3 px-1 shadow-none shadow-neutral-200 rounded-r-2xl md:shadow-[0px_0px_4px_1px]">
           <div className="flex flex-col h-full p-1 gap-4 overflow-y-scroll">
@@ -44,6 +25,6 @@ export default function RoomsBar() {
           </div>
         </div>
       </aside>
-    </CardHookedContext.Provider>
+    </CardHookedContextProvider>
   )
 }

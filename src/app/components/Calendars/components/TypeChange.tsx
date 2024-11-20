@@ -1,5 +1,5 @@
 import { getCalendarTypeById } from "@/lib/typeChange"
-import { useCalendarTypeContext } from "./Calendar"
+import { useCalendarTypeContext } from "../context/CalendarTypeContext"
 
 export default function TypeChange() {
   const { calendarType, setCalendarType } = useCalendarTypeContext()
