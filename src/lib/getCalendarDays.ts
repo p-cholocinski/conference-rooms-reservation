@@ -7,7 +7,7 @@ export default function getCalendarDays(date: Date, calendarType: CalendarTypes)
   for (let d: number = 1; d <= calendarType.daysCount; d++) {
 
     monthDays.push({
-      date: new Date(nextDay).toLocaleDateString(),
+      date: new Date(nextDay).toISOString(),
       dayNumber: nextDay.getDate(),
       currentMonth: isCurrentMonth(nextDay, data.year, data.month),
       currentDay: isCurrentDay(nextDay, data.today),
@@ -49,7 +49,7 @@ function isCurrentMonth(date: Date, year: number, month: number) {
 }
 
 function isCurrentDay(date: Date, today: Date) {
-  return date.toLocaleDateString() === today.toLocaleDateString()
+  return date.toDateString() === today.toDateString()
     ? true
     : false
 }

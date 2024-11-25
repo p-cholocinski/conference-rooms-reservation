@@ -1,5 +1,5 @@
 type CalendarDay = {
-  date?: string,
+  date: string,
   dayNumber: number,
   currentMonth: boolean,
   currentDay: boolean,
@@ -32,8 +32,9 @@ type CalendarTypes = {
 }
 
 type Reservation = {
-  dateFrom: Date,
-  dateTo: Date,
+  reservationId: string,
+  dateFrom: string,
+  dateTo: string,
   category: string,
   roomId: string,
   description: string,

@@ -1,12 +1,13 @@
 import WeekRow from "../../WeekRow";
 import Hours from "./Hours";
-import ReservationArea from "./Reservations";
+import DayWeek from "./DayWeek";
 
 type Props = {
-  calendarDays: CalendarDay[]
+  calendarDays: CalendarDay[],
+  reservations: Reservation[],
 }
 
-export default function CalendarWeek({ calendarDays }: Props) {
+export default function CalendarWeek({ calendarDays, reservations }: Props) {
 
   return (
     <div className="my-4 mx-2 h-full pb-24">
@@ -16,7 +17,7 @@ export default function CalendarWeek({ calendarDays }: Props) {
           <WeekRow />
           <div className="grid grid-cols-7 text-center">
             {calendarDays?.map((weekDay) => (
-              <div key={weekDay.date}>{weekDay.dayNumber}</div>
+              <div key={weekDay.date.toLowerCase()}>{weekDay.dayNumber}</div>
             ))}
           </div>
         </div>
@@ -24,7 +25,11 @@ export default function CalendarWeek({ calendarDays }: Props) {
       <div className="h-full overflow-y-scroll py-1">
         <div className="flex h-[1200px]">
           <Hours />
-          <ReservationArea />
+          <div className="grid grid-cols-7 w-full gap-1 px-1">
+            {calendarDays.map((weekDay) => (
+              <DayWeek key={weekDay.date} calendarDay={weekDay} reservations={reservations} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
