@@ -15,9 +15,14 @@ export default function CalendarWeek({ calendarDays, reservations }: Props) {
         <div className="w-10"></div>
         <div className="w-full">
           <WeekRow />
-          <div className="grid grid-cols-7 text-center">
+          <div className="grid grid-cols-7 text-xl text-center">
             {calendarDays?.map((weekDay) => (
-              <div key={weekDay.date.toLowerCase()}>{weekDay.dayNumber}</div>
+              <div
+                key={weekDay.date.toLowerCase()}
+                className={`w-10 h-10 rounded-full mx-auto content-center ${weekDay.currentDay ? 'bg-neutral-950' : ''}`}
+              >
+                {weekDay.dayNumber}
+              </div>
             ))}
           </div>
         </div>

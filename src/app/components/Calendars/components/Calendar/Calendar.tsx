@@ -30,10 +30,10 @@ export default function Calendar() {
     },
     {
       reservationId: 'reservation-3',
-      dateFrom: new Date('2024-11-20T07:00:00').toISOString(),
-      dateTo: new Date('2024-11-20T08:00:00').toISOString(),
+      dateFrom: new Date('2024-11-20T06:30:00').toISOString(),
+      dateTo: new Date('2024-11-20T08:30:00').toISOString(),
       category: 'spotkanie',
-      description: 'Testowe 1',
+      description: 'Jakiś tam testowy długi tekst tak żeby sprawdzić czy wszystko mi się zmieści',
       roomId: 'room-1',
       userId: 'user-1',
     },
