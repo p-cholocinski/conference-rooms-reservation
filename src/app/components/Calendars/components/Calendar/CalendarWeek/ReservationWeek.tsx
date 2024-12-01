@@ -1,12 +1,14 @@
-import { getReservationWeekHeight, getReservationWeekTop } from "@/lib/getReservationWeekPlacement"
+import { getReservationWeekHeight, getReservationWeekTop } from "@/lib/reservation"
 import { useFormatter } from "next-intl"
 import { useEffect, useRef, useState } from "react"
 
 type Props = {
-  dayReservation: Reservation
+  dayReservation: Reservation,
+  roomOpenHours: Room["openHours"],
+  calendarHeight: number,
 }
 
-export default function ReservationWeek({ dayReservation }: Props) {
+export default function ReservationWeek({ dayReservation, roomOpenHours, calendarHeight }: Props) {
 
   const wholeElement = useRef<HTMLDivElement>(null)
   const contentElement = useRef<HTMLDivElement>(null)
@@ -21,11 +23,6 @@ export default function ReservationWeek({ dayReservation }: Props) {
   const [formatedTimeTo, setFormatedTimeTo] = useState('')
 
   useEffect(() => {
-    if (wholeElement.current) {
-      setElementTop(getReservationWeekTop(new Date(dayReservation.dateFrom), 1200))
-      setElementHeight(getReservationWeekHeight(new Date(dayReservation.dateFrom), new Date(dayReservation.dateTo), 1200))
-    }
-
     const getFormatedTime = (date: string): string => {
 
       const formatedTime =
@@ -40,6 +37,11 @@ export default function ReservationWeek({ dayReservation }: Props) {
     setFormatedTimeFrom(getFormatedTime(dayReservation.dateFrom))
     setFormatedTimeTo(getFormatedTime(dayReservation.dateTo))
   }, [])
+
+  useEffect(() => {
+    setElementTop(getReservationWeekTop(new Date(dayReservation.dateFrom), roomOpenHours, calendarHeight))
+    setElementHeight(getReservationWeekHeight(new Date(dayReservation.dateFrom), new Date(dayReservation.dateTo), roomOpenHours, calendarHeight))
+  }, [calendarHeight])
 
   useEffect(() => {
     if (contentElement.current && wholeElement.current) {

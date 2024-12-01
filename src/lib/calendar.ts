@@ -1,4 +1,19 @@
-export default function getCalendarDays(date: Date, calendarType: CalendarTypes): CalendarDay[] {
+const calendarTypes: CalendarTypes[] = [
+  {
+    id: "week",
+    name: "Tygodniowy",
+    daysCount: 7,
+  },
+  {
+    id: "month",
+    name: "Miesięczny",
+    daysCount: 42,
+  },
+]
+
+// CalendarDays
+
+export function getCalendarDays(date: Date, calendarType: CalendarTypes): CalendarDay[] {
   const data = getData(date, calendarType.id)
 
   const monthDays: CalendarDay[] = []
@@ -52,4 +67,42 @@ function isCurrentDay(date: Date, today: Date) {
   return date.toDateString() === today.toDateString()
     ? true
     : false
+}
+
+// CalendarPeriod
+
+export function getPrevPeriod(currentPeriod: Date, calendarTypeId: CalendarTypes["id"]) {
+  const prevPeriod =
+    calendarTypeId === "month"
+      ? new Date(currentPeriod.getFullYear(), currentPeriod.getMonth() - 1, 1)
+      : new Date(currentPeriod.getFullYear(), currentPeriod.getMonth(), currentPeriod.getDate() - 7)
+
+  return prevPeriod
+}
+
+export function getNextPeriod(currentPeriod: Date, calendarTypeId: CalendarTypes["id"]) {
+  const nextPeriod =
+    calendarTypeId === "month"
+      ? new Date(currentPeriod.getFullYear(), currentPeriod.getMonth() + 1, 1)
+      : new Date(currentPeriod.getFullYear(), currentPeriod.getMonth(), currentPeriod.getDate() + 7)
+
+  return nextPeriod
+}
+
+// CalendarType
+
+export function getCalendarTypes(): CalendarTypes[] {
+  return calendarTypes
+}
+
+export function getCalendarTypeById(typeId: CalendarTypes["id"]) {
+  const calendarType = calendarTypes.find((type) => (
+    type.id === typeId
+  ))
+
+  if (!calendarType) {
+    return calendarTypes[0]
+  } else {
+    return calendarType
+  }
 }

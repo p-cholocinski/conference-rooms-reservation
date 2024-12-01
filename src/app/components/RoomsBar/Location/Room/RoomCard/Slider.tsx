@@ -1,4 +1,4 @@
-import { getNextPicturePath, getPrevPicturePath } from "@/lib/getPicturePath"
+import { getNextPicturePath, getPrevPicturePath } from "@/lib/room"
 import Image from "next/image"
 import { useState } from "react"
 import { MdArrowLeft, MdArrowRight } from "react-icons/md"

@@ -16,9 +16,9 @@
 3. [x] Możliwość przełączenia się pomiędzy miesiącami,
 ### Kalendarz tygodniowy:
 1. [x] Pokazane godziny i dni tygodnia (nr dnia - dzień słownie),
-2. [ ] Rezerwacja w formie kafelkowej rozlewa się w danym dniu w wybranych godzinach,
+2. [x] Rezerwacja w formie kafelkowej rozlewa się w danym dniu w wybranych godzinach,
 3. [ ] Możliwość zaznaczenia na kalendarzu godzin w których chcemy dokonać rezerwacji,
-4. [ ] Na kafelku rezerwacji wyświetlana jest godzina, kategoria oraz opis rezerwacji,
+4. [x] Na kafelku rezerwacji wyświetlana jest godzina oraz opis rezerwacji,
 5. [x] Możliwość przełączenia się pomiędzy tygodniami,
 ### Wybór sali konferencyjnej:
 1. [x] Panel boczny w którym wyświetlone są wszystkie sale z podziałem na budynki,

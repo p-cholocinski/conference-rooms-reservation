@@ -1,31 +1,37 @@
-export default function Hours() {
+import { getHoursRange } from "@/lib/room"
+import { useEffect, useState } from "react"
+
+type Props = {
+  roomOpenHours: Room["openHours"]
+}
+
+export default function Hours({ roomOpenHours }: Props) {
+
+  const [hours, setHours] = useState<string[]>([])
+
+  useEffect(() => {
+    setHours(getHoursRange(roomOpenHours.from, roomOpenHours.to))
+  }, [roomOpenHours])
+
   return (
-    <div className="flex flex-col justify-between w-10 text-xs">
-      <div>00:00</div>
-      <div>01:00</div>
-      <div>02:00</div>
-      <div>03:00</div>
-      <div>04:00</div>
-      <div>05:00</div>
-      <div>06:00</div>
-      <div>07:00</div>
-      <div>08:00</div>
-      <div>09:00</div>
-      <div>10:00</div>
-      <div>11:00</div>
-      <div>12:00</div>
-      <div>13:00</div>
-      <div>14:00</div>
-      <div>15:00</div>
-      <div>16:00</div>
-      <div>17:00</div>
-      <div>18:00</div>
-      <div>19:00</div>
-      <div>20:00</div>
-      <div>21:00</div>
-      <div>22:00</div>
-      <div>23:00</div>
-      <div>00:00</div>
+    <div
+      className="flex flex-col min-w-12 justify-between text-xs"
+    >
+      {hours?.map((hour) => (
+        <div
+          key={hour}
+          className="h-full min-h-12 first:invisible"
+        >
+          <div
+            className="relative -top-2"
+          >
+            {hour}
+          </div>
+          <div
+            className="absolute w-[calc(100%-40px)] -translate-y-4 ml-10 border-t border-neutral-400/20"
+          />
+        </div>
+      ))}
     </div>
   )
 }

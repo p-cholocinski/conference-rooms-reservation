@@ -23,6 +23,10 @@ type Room = {
     value: string | boolean,
   }[],
   location: string,
+  openHours: {
+    from: number,
+    to: number,
+  }
 }
 
 type CalendarTypes = {

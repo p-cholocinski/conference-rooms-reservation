@@ -1,19 +1,28 @@
-import getReservationsByDate from "@/lib/getReservationsByDate"
+import { getReservationsByDate } from "@/lib/reservation"
 import ReservationWeek from "./ReservationWeek"
+import { useEffect, useState } from "react"
 
 type Props = {
-  calendarDay: CalendarDay
-  reservations: Reservation[]
+  calendarDay: CalendarDay,
+  reservations: Reservation[],
+  roomOpenHours: Room["openHours"],
+  calendarHeight: number,
 }
 
-export default function DayWeek({ calendarDay, reservations }: Props) {
+export default function DayWeek({ calendarDay, reservations, roomOpenHours, calendarHeight }: Props) {
 
-  const dayReservations = getReservationsByDate(reservations, calendarDay.date)
+  const [dayReservations, setDayReservations] = useState<Reservation[] | undefined>(undefined)
+
+  useEffect(() => {
+    setDayReservations(getReservationsByDate(reservations, calendarDay.date))
+  }, [reservations])
 
   return (
-    <div className="relative h-full border border-neutral-400 rounded-md hover:shadow-[0px_0px_2px_1px]">
-      {dayReservations.map((dayReservation) => (
-        <ReservationWeek key={dayReservation.reservationId} dayReservation={dayReservation} />
+    <div
+      className="relative h-full border-l border-neutral-400 hover:bg-neutral-700/20"
+    >
+      {dayReservations?.map((dayReservation) => (
+        <ReservationWeek key={dayReservation.reservationId} dayReservation={dayReservation} roomOpenHours={roomOpenHours} calendarHeight={calendarHeight} />
       ))}
     </div>
   )

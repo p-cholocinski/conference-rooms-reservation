@@ -1,10 +1,10 @@
-import { getMainPicturePath } from "@/lib/getPicturePath"
 import Image from "next/image"
 import RoomCard from "./RoomCard/RoomCard"
 import { useState } from "react"
 import { MdArrowRight } from "react-icons/md"
 import { useCardHookedContext } from "../../context/CardHookedContext"
 import { useSelectedRoomContext } from "@/app/context/SelectedRoomContext"
+import { getMainPicturePath } from "@/lib/room"
 
 type Props = {
   room: Room

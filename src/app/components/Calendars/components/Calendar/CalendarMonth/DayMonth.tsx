@@ -1,4 +1,4 @@
-import getReservationsByDate from "@/lib/getReservationsByDate"
+import { getReservationsByDate } from "@/lib/reservation"
 import ReservationMonth from "./ReservationMonth"
 
 type Props = {

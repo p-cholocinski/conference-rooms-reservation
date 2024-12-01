@@ -1,98 +1,13 @@
 import { MdArrowDropUp } from "react-icons/md";
 import Room from "./Room/Room";
-import getRoomsByLocation from "@/lib/getRoomsByLocation";
+import { getRoomsByLocation } from "@/lib/room";
 import { useState } from "react";
 
 export default function Location({ id, name }: Place) {
 
-  const rooms: Room[] = [
-    {
-      id: "room-1",
-      name: "Sala konferencyjna 1",
-      description: "Na pierwszym piętrze z zadziwiająco dziwną rozetą, która nie do końca przypomina rozetę, ale bardziej coś w rodzaju firany która utożsamia się z obrusem. Ale lepiej się tym nie przemować, ponieważ można urazić tą niewinną duszyczkę. Jeszcze jakiś dodatkowy tekst, żeby sprawdzić czy wszystko się zmieści.",
-      pictures: [
-        {
-          path: "/images/room-1.jpg",
-          main: true,
-        },
-        {
-          path: "/images/room-1-a.jpg",
-          main: false,
-        }
-      ],
-      params: [
-        {
-          param: "Liczba miejsc",
-          value: "12",
-        },
-        {
-          param: "Wyposażona w telewizor",
-          value: true,
-        },
-        {
-          param: "Jasne pomieszczenie",
-          value: true,
-        },
-        {
-          param: "Zatrwarzające światło wewnątrz",
-          value: true,
-        },
-        {
-          param: "Wyposażona w doskonałej jakości rzutnik o idealnych parametrach",
-          value: true,
-        }
-      ],
-      location: "location-1",
-    },
-    {
-      id: "room-2",
-      name: "Sala konferencyjna 2",
-      description: "Na drugim piętrze",
-      pictures: [
-        {
-          path: "/images/room-2.jpg",
-          main: true,
-        }
-      ],
-      params: [
-        {
-          param: "Liczba miejsc",
-          value: "12",
-        },
-        {
-          param: "Wyposażona w telewizor",
-          value: true,
-        }
-      ],
-      location: "location-1",
-    },
-    {
-      id: "room-3",
-      name: "Sala konferencyjna 3",
-      description: "Na trzecim piętrze",
-      pictures: [
-        {
-          path: "/images/room-3.jpg",
-          main: true,
-        }
-      ],
-      params: [
-        {
-          param: "Liczba miejsc",
-          value: "12",
-        },
-        {
-          param: "Wyposażona w telewizor",
-          value: false,
-        }
-      ],
-      location: "location-2",
-    }
-  ]
-
   const [roomsCollapsed, setRoomsCollapsed] = useState(true)
 
-  const filteredRooms: Room[] = getRoomsByLocation(rooms, id)
+  const filteredRooms: Room[] = getRoomsByLocation(id)
 
   if (filteredRooms.length === 0) { return }
 
