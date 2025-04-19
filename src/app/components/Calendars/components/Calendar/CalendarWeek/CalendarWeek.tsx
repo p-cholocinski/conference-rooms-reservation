@@ -1,17 +1,29 @@
-import WeekRow from "../../WeekRow";
+'use client'
+
+import { useRef } from "react";
+import WeekRow from "@/components/WeekRow";
 import Hours from "./Hours";
 import DayWeek from "./DayWeek";
-import { useRef } from "react";
 import useResizeObserver from "@/hooks/useResizeObserver";
+import DaysRow from "./DaysRow";
+import { Reservation, ReservationCategory, Room } from "@prisma/client";
 
 type Props = {
   calendarDays: CalendarDay[],
-  reservations: Reservation[],
-  roomOpenHours: Room["openHours"],
+  room: {
+    id: Room["id"] | null,
+    name: Room["name"] | null,
+    openFrom: Room["openFrom"],
+    openTo: Room["openTo"],
+  },
+  reservations: ({
+    category: ReservationCategory,
+  } & Reservation)[],
+  rooms: { id: Room["id"], name: Room["name"], openFrom: Room["openFrom"], openTo: Room["openTo"] }[]
+  reservationCategories: { id: ReservationCategory["id"], name: ReservationCategory["name"] }[]
 }
 
-export default function CalendarWeek({ calendarDays, reservations, roomOpenHours }: Props) {
-
+export default function CalendarWeek({ calendarDays, room, reservations, rooms, reservationCategories }: Props) {
   const calendarWeekElement = useRef<HTMLDivElement>(null)
 
   const calendarHeight = useResizeObserver(calendarWeekElement)
@@ -21,20 +33,7 @@ export default function CalendarWeek({ calendarDays, reservations, roomOpenHours
       <div className="w-full flex overflow-y-scroll overflow-x-hidden pr-1">
         <div className="w-full pl-10 *:pl-2">
           <WeekRow />
-          <div className="grid grid-cols-7 border-b border-neutral-400 text-xl text-center pb-1">
-            {calendarDays?.map((weekDay) => (
-              <div
-                key={weekDay.date.toLowerCase()}
-              >
-                <div
-                  className={`w-10 h-10 rounded-full mx-auto content-center ${weekDay.currentDay ? 'bg-neutral-950' : ''}`}
-                >
-                  {weekDay.dayNumber}
-                </div>
-                <div className="absolute h-4 -translate-y-3 border-l border-neutral-400"></div>
-              </div>
-            ))}
-          </div>
+          <DaysRow calendarDays={calendarDays} />
         </div>
       </div>
       <div className="h-full overflow-y-scroll">
@@ -42,10 +41,18 @@ export default function CalendarWeek({ calendarDays, reservations, roomOpenHours
           ref={calendarWeekElement}
           className="flex relative min-h-full max-h-[1200px] mr-1"
         >
-          <Hours roomOpenHours={roomOpenHours} />
+          <Hours openFrom={room.openFrom} openTo={room.openTo} />
           <div className="grid grid-cols-7 w-full">
             {calendarDays.map((weekDay) => (
-              <DayWeek key={weekDay.date} calendarDay={weekDay} reservations={reservations} roomOpenHours={roomOpenHours} calendarHeight={calendarHeight} />
+              <DayWeek
+                key={weekDay.date}
+                calendarDay={weekDay}
+                room={room}
+                reservations={reservations}
+                calendarHeight={calendarHeight}
+                rooms={rooms}
+                reservationCategories={reservationCategories}
+              />
             ))}
           </div>
         </div>

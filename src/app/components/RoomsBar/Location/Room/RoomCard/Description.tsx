@@ -1,5 +1,7 @@
+import { Room } from "@prisma/client"
+
 type Props = {
-  description: Room["description"],
+  description: Room['description'] | null,
 }
 
 export default function Description({ description }: Props) {

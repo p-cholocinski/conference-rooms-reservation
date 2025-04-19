@@ -1,9 +1,11 @@
 import DayMonth from "./DayMonth";
-import WeekRow from "../../WeekRow";
+import WeekRow from "../../../../../../components/WeekRow";
+import { Reservation } from "@prisma/client";
+import { getReservationsByDate } from "@/lib/reservation";
 
 type Props = {
-  calendarDays: CalendarDay[]
-  reservations: Reservation[]
+  calendarDays: CalendarDay[],
+  reservations: Reservation[],
 }
 
 export default function CalendarMonth({ calendarDays, reservations }: Props) {
@@ -13,8 +15,12 @@ export default function CalendarMonth({ calendarDays, reservations }: Props) {
       <WeekRow />
       <div className="h-full grid grid-cols-7 grid-rows-6 gap-2">
         {calendarDays
-          ? calendarDays.map(monthDay => (
-            <DayMonth key={monthDay.date} calendarDay={monthDay} reservations={reservations} />
+          ? calendarDays.map(calendarDay => (
+            <DayMonth
+              key={calendarDay.date}
+              calendarDay={calendarDay}
+              dayReservations={getReservationsByDate(reservations, calendarDay.date)}
+            />
           ))
           : ''}
       </div>

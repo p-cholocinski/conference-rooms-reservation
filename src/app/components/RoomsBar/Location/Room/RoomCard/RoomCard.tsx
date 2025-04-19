@@ -1,18 +1,32 @@
 import Slider from "./Slider"
 import Description from "./Description"
 import Parameters from "./Parameters"
+import useClickOutside from "@/hooks/useClickOutside"
+import { Dispatch, SetStateAction, useRef } from "react"
+import { Room, RoomParameter, RoomPicture, RoomToRoomParameter } from "@prisma/client"
 
 type Props = {
-  visible: boolean,
-  room: Room,
+  room: ({
+    pictures: RoomPicture[];
+    parameters: ({
+      parameter: RoomParameter;
+    } & RoomToRoomParameter)[];
+  } & Room),
+  setVisible: Dispatch<SetStateAction<boolean>>
 }
 
-export default function RoomCard({ visible, room }: Props) {
-  const { name, description, pictures, params } = room
+export default function RoomCard({ room, setVisible }: Props) {
+  const elementRef = useRef<HTMLDivElement>(null)
+
+  useClickOutside(elementRef, () => setVisible(false))
+
+  const { name, description, pictures, parameters } = room
 
   return (
     <div
-      className={`${visible ? 'absolute ' : 'hidden '}top-4 w-[36rem] left-[102%] rounded-lg shadow-[0px_0px_2px_1px] shadow-neutral-200 cursor-default`}>
+      key={room.id + '-card'}
+      ref={elementRef}
+      className="absolute top-4 w-[36rem] left-[102%] rounded-lg shadow-[0px_0px_2px_1px] shadow-neutral-200 cursor-default">
       <div className="bg-neutral-600 px-4 py-2 font-bold text-2xl rounded-t-lg">
         {name}
       </div>
@@ -21,7 +35,7 @@ export default function RoomCard({ visible, room }: Props) {
           <Slider name={name} pictures={pictures} />
           <Description description={description} />
         </div>
-        <Parameters params={params} />
+        <Parameters parameters={parameters} />
       </div>
     </div>
   )

@@ -1,4 +1,5 @@
-import { useFormatter } from "next-intl"
+import { formatTimeRange } from "@/lib/dateTimeFormats"
+import { Reservation } from "@prisma/client"
 
 type Props = {
   dayReservation: Reservation
@@ -6,26 +7,13 @@ type Props = {
 
 export default function ReservationMonth({ dayReservation }: Props) {
 
-  const format = useFormatter()
-
-  const getFormatedTime = (date: string): string => {
-
-    const formatedTime =
-      format.dateTime(new Date(date), {
-        hour: "numeric",
-        minute: "numeric"
-      })
-
-    return formatedTime
-  }
+  const formatedTimeRange = formatTimeRange(dayReservation.startDate, dayReservation.endDate)
 
   return (
     <div
       className="bg-neutral-500 h-5 px-1 content-center text-xs rounded-sm truncate hover:bg-neutral-700"
       title={dayReservation.description}>
-      {getFormatedTime(dayReservation.dateFrom)
-        + ' - ' + getFormatedTime(dayReservation.dateTo)
-        + ' ' + dayReservation.description}
+      {formatedTimeRange + ' ' + dayReservation.description}
     </div>
   )
 }

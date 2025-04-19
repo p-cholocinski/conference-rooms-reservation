@@ -1,16 +1,13 @@
-import { getReservationsByDate } from "@/lib/reservation"
 import ReservationMonth from "./ReservationMonth"
+import { Reservation } from "@prisma/client"
 
 type Props = {
-  calendarDay: CalendarDay
-  reservations: Reservation[]
+  calendarDay: CalendarDay,
+  dayReservations: Reservation[],
 }
 
-export default function DayMonth({ calendarDay, reservations }: Props) {
-
+export default function DayMonth({ calendarDay, dayReservations }: Props) {
   const { currentMonth, currentDay, dayNumber } = calendarDay
-
-  const dayReservations = getReservationsByDate(reservations, calendarDay.date)
 
   return (
     <div className="p-[2px] border border-neutral-400 rounded-md hover:shadow-[0px_0px_4px_1px] hover:shadow-neutral-200 hover:cursor-pointer hover:scale-105">
@@ -23,7 +20,7 @@ export default function DayMonth({ calendarDay, reservations }: Props) {
         <div className="h-full overflow-y-scroll scrollbar-hidden">
           <div className="flex flex-col gap-1">
             {dayReservations.map((dayReservation) => (
-              <ReservationMonth key={dayReservation.reservationId} dayReservation={dayReservation} />
+              <ReservationMonth key={dayReservation.id} dayReservation={dayReservation} />
             ))}
           </div>
         </div>

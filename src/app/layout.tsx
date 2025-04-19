@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "./components/Navbar";
-import { getLocale, getMessages } from "next-intl/server";
-import { NextIntlClientProvider } from "next-intl";
+import "@/styles/toast.css";
+import ToastContainer from "@/components/ToastContainer";
 
 export const metadata: Metadata = {
   title: "Conference rooms reservation",
@@ -14,17 +13,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const locale = await getLocale()
-
-  const messages = await getMessages()
-
   return (
-    <html lang={locale}>
+    <html lang="en" suppressHydrationWarning>
       <body>
-        <NextIntlClientProvider messages={messages}>
-          <Navbar />
-          {children}
-        </NextIntlClientProvider>
+        {children}
+        <ToastContainer />
       </body>
     </html>
   );

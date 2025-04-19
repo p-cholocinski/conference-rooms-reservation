@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Room" ALTER COLUMN "openFrom" DROP DEFAULT,
+ALTER COLUMN "openTo" DROP DEFAULT;

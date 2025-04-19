@@ -1,24 +1,23 @@
-import { useCalendarTypeContext } from "../context/CalendarTypeContext"
-import { useEffect, useState } from "react"
-import { getCalendarTypeById, getCalendarTypes } from "@/lib/calendar"
+'use client'
 
-export default function TypeChange() {
-  const { calendarType, setCalendarType } = useCalendarTypeContext()
+import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams"
+import { calendars } from "@/lib/calendar"
 
-  const [calendarTypes, setCalendarTypes] = useState<CalendarTypes[] | undefined>(undefined)
+type Props = {
+  calendarType: Calendar["type"],
+}
 
-  useEffect(() => {
-    setCalendarTypes(getCalendarTypes())
-  }, [])
+export default function TypeChange({ calendarType }: Props) {
+  const updateSearchParams = useUpdateSearchParams()
 
   return (
     <div className="bg-neutral-500 w-60 p-0.5 text-sm flex text-center border border-neutral-400 rounded-2xl">
-      {calendarTypes?.map((type) => (
+      {calendars.map((calendar) => (
         <button
-          key={type.id}
-          className={`w-full h-full rounded-2xl${calendarType.id === type.id ? ' bg-neutral-400 font-bold' : ''}`}
-          onClick={() => setCalendarType(getCalendarTypeById(type.id))}>
-          {type.name}
+          key={calendar.type}
+          className={`w-full h-full rounded-2xl${calendarType === calendar.type ? ' bg-neutral-400 font-bold' : ''}`}
+          onClick={() => { updateSearchParams("ct", calendar.type) }}>
+          {calendar.name}
         </button>
       ))
       }

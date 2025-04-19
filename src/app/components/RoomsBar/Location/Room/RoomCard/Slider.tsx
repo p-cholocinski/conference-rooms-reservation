@@ -1,16 +1,17 @@
-import { getNextPicturePath, getPrevPicturePath } from "@/lib/room"
 import Image from "next/image"
 import { useState } from "react"
 import { MdArrowLeft, MdArrowRight } from "react-icons/md"
+import { getNextPicturePath, getPrevPicturePath } from "@/lib/room"
+import { RoomPicture } from "@prisma/client"
 
 type Props = {
   name: string,
-  pictures: Room["pictures"],
+  pictures: RoomPicture[],
 }
 
 export default function Slider({ name, pictures }: Props) {
   const [isHovered, setIsHovered] = useState(false)
-  const [picturePath, setPicturePath] = useState(pictures[0].path)
+  const [picturePath, setPicturePath] = useState(pictures[0].url)
   const [pictureZoomVisible, setPictureZoomVisible] = useState(false)
 
   return (
@@ -45,6 +46,7 @@ export default function Slider({ name, pictures }: Props) {
           alt={name}
           width={640}
           height={640}
+          priority={true}
         />
       </div>
     </div>

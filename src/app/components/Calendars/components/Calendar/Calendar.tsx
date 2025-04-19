@@ -1,39 +1,73 @@
-import { useEffect, useState } from "react";
-import { useCalendarPeriodContext } from "../../context/CalendarPeriodContext";
-import { useCalendarTypeContext } from "../../context/CalendarTypeContext";
 import CalendarMonth from "./CalendarMonth/CalendarMonth";
 import CalendarWeek from "./CalendarWeek/CalendarWeek";
-import { useSelectedRoomContext } from "@/app/context/SelectedRoomContext";
-import { getRoomOpenHours } from "@/lib/room";
-import { getReservationsByRoom } from "@/lib/reservation";
 import { getCalendarDays } from "@/lib/calendar";
+import { Room } from "@prisma/client";
+import prisma from "@/lib/prisma";
 
-export default function Calendar() {
+type Props = {
+  roomId?: Room["id"],
+  calendar: Calendar,
+  calendarPeriod: string,
+}
 
-  const { calendarPeriod } = useCalendarPeriodContext()
-  const { calendarType } = useCalendarTypeContext()
-  const { selectedRoom } = useSelectedRoomContext()
+export default async function Calendar({ roomId, calendar, calendarPeriod }: Props) {
+  const calendarDays = getCalendarDays(new Date(calendarPeriod), calendar.type)
 
-  const [calendarDays, setCalendarDays] = useState<CalendarDay[] | undefined>(undefined)
-  const [reservations, setReservations] = useState<Reservation[] | undefined>(undefined)
-  const [roomOpenHours, setRoomOpenHours] = useState<Room["openHours"] | undefined>(undefined)
+  const rooms = await prisma.room.findMany({
+    select: {
+      id: true,
+      name: true,
+      openFrom: true,
+      openTo: true,
+    }
+  })
 
-  useEffect(() => {
-    const calendarDays = getCalendarDays(calendarPeriod, calendarType)
-    const reservations = getReservationsByRoom(selectedRoom)
-    const roomOpenHours = getRoomOpenHours(selectedRoom)
-    setCalendarDays(calendarDays)
-    setReservations(reservations)
-    setRoomOpenHours(roomOpenHours)
-  }, [calendarPeriod, calendarType, selectedRoom])
+  const room: {
+    id: Room["id"] | null,
+    name: Room["name"] | null,
+    openFrom: Room["openFrom"],
+    openTo: Room["openTo"],
+  } = roomId
+      ? rooms.find(room => room.id === roomId)
+      ?? { id: null, name: null, openFrom: 0, openTo: 23 }
+      : { id: null, name: null, openFrom: 0, openTo: 23 }
+
+  const reservations = roomId
+    ? await prisma.reservation.findMany({
+      include: {
+        category: true,
+      },
+      where: {
+        roomId: roomId,
+        startDate: { gte: calendarDays[0].date },
+        endDate: { lte: calendarDays[calendarDays.length - 1].date }
+      }
+    })
+    : []
+
+  const reservationCategories = await prisma.reservationCategory.findMany({
+    select: {
+      id: true,
+      name: true,
+    }
+  })
 
   return (
     <>
-      {calendarDays && reservations && roomOpenHours ?
-        calendarType.id === 'week'
-          ? <CalendarWeek calendarDays={calendarDays} reservations={reservations} roomOpenHours={roomOpenHours} />
-          : calendarType.id === 'month'
-            ? <CalendarMonth calendarDays={calendarDays} reservations={reservations} />
+      {calendarDays && reservations ?
+        calendar.type === 'week'
+          ? <CalendarWeek
+            calendarDays={calendarDays}
+            room={room}
+            reservations={reservations}
+            rooms={rooms}
+            reservationCategories={reservationCategories}
+          />
+          : calendar.type === 'month'
+            ? <CalendarMonth
+              calendarDays={calendarDays}
+              reservations={reservations}
+            />
             : ''
         : ''
       }

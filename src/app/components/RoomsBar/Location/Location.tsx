@@ -1,15 +1,23 @@
-import { MdArrowDropUp } from "react-icons/md";
-import Room from "./Room/Room";
-import { getRoomsByLocation } from "@/lib/room";
-import { useState } from "react";
+'use client'
 
-export default function Location({ id, name }: Place) {
+import { MdArrowDropUp } from "react-icons/md"
+import Room from "./Room/Room"
+import { useState } from "react"
+import { Room as RoomType, RoomParameter, RoomPicture, RoomToRoomParameter, Location as LocationType } from "@prisma/client"
+
+type Props = {
+  name: LocationType["name"],
+  rooms: ({
+    pictures: RoomPicture[];
+    parameters: ({
+      parameter: RoomParameter;
+    } & RoomToRoomParameter)[];
+  } & RoomType)[]
+}
+
+export default function Location({ name, rooms }: Props) {
 
   const [roomsCollapsed, setRoomsCollapsed] = useState(true)
-
-  const filteredRooms: Room[] = getRoomsByLocation(id)
-
-  if (filteredRooms.length === 0) { return }
 
   return (
     <div>
@@ -20,7 +28,7 @@ export default function Location({ id, name }: Place) {
         <MdArrowDropUp className={`text-2xl transition-transform duration-300${!roomsCollapsed ? ' rotate-180' : ''}`} />
       </div>
       <div className={`${!roomsCollapsed ? 'hidden ' : ''}ml-1.5 border-x border-b border-neutral-400 rounded-b-md flex flex-col`}>
-        {filteredRooms.map(room => (
+        {rooms.map(room => (
           <Room key={room.id} room={room} />
         ))}
       </div>

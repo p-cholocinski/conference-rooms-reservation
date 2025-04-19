@@ -1,25 +1,28 @@
-const calendarTypes: CalendarTypes[] = [
+import { formatTime } from "@/lib/dateTimeFormats"
+
+export const calendars: Calendar[] = [
   {
-    id: "week",
+    type: "week",
     name: "Tygodniowy",
-    daysCount: 7,
+    dayCount: 7
   },
   {
-    id: "month",
+    type: "month",
     name: "Miesięczny",
-    daysCount: 42,
+    dayCount: 42
   },
 ]
 
 // CalendarDays
 
-export function getCalendarDays(date: Date, calendarType: CalendarTypes): CalendarDay[] {
-  const data = getData(date, calendarType.id)
+export function getCalendarDays(date: Date, calendarType: Calendar["type"]): CalendarDay[] {
+  const data = getData(date, calendarType)
+  const calendar = getCalendarByType(calendarType)
 
   const monthDays: CalendarDay[] = []
   const nextDay: Date = getWeekMonday(data.startDate)
 
-  for (let d: number = 1; d <= calendarType.daysCount; d++) {
+  for (let d: number = 1; d <= calendar.dayCount; d++) {
 
     monthDays.push({
       date: new Date(nextDay).toISOString(),
@@ -34,11 +37,11 @@ export function getCalendarDays(date: Date, calendarType: CalendarTypes): Calend
   return monthDays
 }
 
-function getData(date: Date, calendarTypeId: CalendarTypes["id"]) {
+function getData(date: Date, calendarType: Calendar["type"]) {
   const startDate: Date =
-    calendarTypeId === "month"
-      ? new Date(date.getFullYear(), date.getMonth(), 1)
-      : new Date(date)
+    calendarType === "month"
+      ? new Date(date.getFullYear(), date.getMonth(), 1, 0, 0, 0, 0)
+      : new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
   const year: number = startDate.getFullYear()
   const month: number = startDate.getMonth()
   const today: Date = new Date()
@@ -69,40 +72,77 @@ function isCurrentDay(date: Date, today: Date) {
     : false
 }
 
+// CalendarTypes
+
+export function getCalendarByType(calendarType: Calendar["type"]) {
+  return calendars.find(calendar => calendar.type === calendarType) as Calendar
+}
+
 // CalendarPeriod
 
-export function getPrevPeriod(currentPeriod: Date, calendarTypeId: CalendarTypes["id"]) {
-  const prevPeriod =
-    calendarTypeId === "month"
-      ? new Date(currentPeriod.getFullYear(), currentPeriod.getMonth() - 1, 1)
-      : new Date(currentPeriod.getFullYear(), currentPeriod.getMonth(), currentPeriod.getDate() - 7)
-
-  return prevPeriod
+export function getPrevPeriod(date: Date, calendarType: Calendar["type"] = "month") {
+  const prevDate =
+    calendarType === "month"
+      ? new Date(date.getFullYear(), date.getMonth() - 1, 1)
+      : new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7)
+  return prevDate
 }
 
-export function getNextPeriod(currentPeriod: Date, calendarTypeId: CalendarTypes["id"]) {
-  const nextPeriod =
-    calendarTypeId === "month"
-      ? new Date(currentPeriod.getFullYear(), currentPeriod.getMonth() + 1, 1)
-      : new Date(currentPeriod.getFullYear(), currentPeriod.getMonth(), currentPeriod.getDate() + 7)
-
-  return nextPeriod
+export function getCurrentPeriod(date: Date, calendarType: Calendar["type"] = "month"): Date {
+  const currentDate =
+    calendarType === "month"
+      ? new Date(date.getFullYear(), date.getMonth(), 1)
+      : new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  return currentDate
 }
 
-// CalendarType
-
-export function getCalendarTypes(): CalendarTypes[] {
-  return calendarTypes
+export function getNextPeriod(date: Date, calendarType: Calendar["type"] = "month") {
+  const nextDate =
+    calendarType === "month"
+      ? new Date(date.getFullYear(), date.getMonth() + 1, 1)
+      : new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7)
+  return nextDate
 }
 
-export function getCalendarTypeById(typeId: CalendarTypes["id"]) {
-  const calendarType = calendarTypes.find((type) => (
-    type.id === typeId
-  ))
+// Time
 
-  if (!calendarType) {
-    return calendarTypes[0]
-  } else {
-    return calendarType
+export function getDateTimeList(dateTimeStart: string, dateTimeEnd: string) {
+  const timeStart: Date = new Date(dateTimeStart)
+  const timeEnd: Date = new Date(dateTimeEnd)
+  const timeList: { value: string, label: string }[] = []
+
+  while (timeStart <= timeEnd) {
+    timeList.push({
+      value: timeStart.toISOString(),
+      label: formatTime(timeStart),
+    })
+    timeStart.setMinutes(timeStart.getMinutes() + 15)
   }
+
+  return timeList
+}
+
+export function getRoundedToQuarterTime(timeStart: Date): Date {
+  const time: Date = new Date(timeStart)
+  const timeMinutes: number = time.getMinutes()
+  const quarterCount: number = Math.ceil(timeMinutes / 15)
+
+  time.setMinutes(15 * quarterCount, 0, 0)
+
+  return time
+}
+
+export function getDayStart(date: Date): Date {
+  const dayDate: Date = new Date(date)
+  const dayStart: Date = new Date(dayDate.setHours(0, 0, 0, 0))
+
+  return dayStart
+}
+
+export function getNextDayStart(date: Date): Date {
+  const dayDate: Date = new Date(date)
+  const nextDay: Date = new Date(dayDate.setDate(dayDate.getDate() + 1))
+  const nextDayStart: Date = new Date(nextDay.setHours(0, 0, 0, 0))
+
+  return nextDayStart
 }

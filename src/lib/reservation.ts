@@ -1,103 +1,23 @@
-const reservationsObj: Reservation[] = [
-  {
-    reservationId: 'reservation-1',
-    dateFrom: new Date('2024-12-02T07:00:00').toISOString(),
-    dateTo: new Date('2024-12-02T08:00:00').toISOString(),
-    category: 'spotkanie',
-    description: 'Plan Kontrli Jakości Systemów - Pobieranie oprogramowania',
-    roomId: 'room-1',
-    userId: 'user-1',
-  },
-  {
-    reservationId: 'reservation-2',
-    dateFrom: new Date('2024-12-02T08:00:00').toISOString(),
-    dateTo: new Date('2024-12-02T08:30:00').toISOString(),
-    category: 'spotkanie',
-    description: 'Arrow K',
-    roomId: 'room-1',
-    userId: 'user-1',
-  },
-  {
-    reservationId: 'reservation-3',
-    dateFrom: new Date('2024-12-02T09:00:00').toISOString(),
-    dateTo: new Date('2024-12-02T09:15:00').toISOString(),
-    category: 'spotkanie',
-    description: 'Jakiś tam testowy długi tekst tak żeby sprawdzić czy wszystko mi się zmieści',
-    roomId: 'room-1',
-    userId: 'user-1',
-  },
-  {
-    reservationId: 'reservation-4',
-    dateFrom: new Date('2024-12-02T09:30:00').toISOString(),
-    dateTo: new Date('2024-12-02T10:00:00').toISOString(),
-    category: 'spotkanie',
-    description: 'Testowe 2',
-    roomId: 'room-1',
-    userId: 'user-1',
-  },
-  {
-    reservationId: 'reservation-5',
-    dateFrom: new Date('2024-12-02T11:00:00').toISOString(),
-    dateTo: new Date('2024-12-02T13:00:00').toISOString(),
-    category: 'spotkanie',
-    description: 'Testowe 2',
-    roomId: 'room-1',
-    userId: 'user-1',
-  },
-  {
-    reservationId: 'reservation-6',
-    dateFrom: new Date('2024-12-02T13:15:00').toISOString(),
-    dateTo: new Date('2024-12-02T14:00:00').toISOString(),
-    category: 'spotkanie',
-    description: 'Testowe 2',
-    roomId: 'room-1',
-    userId: 'user-1',
-  },
-  {
-    reservationId: 'reservation-7',
-    dateFrom: new Date('2024-12-02T14:30:00').toISOString(),
-    dateTo: new Date('2024-12-02T15:00:00').toISOString(),
-    category: 'spotkanie',
-    description: 'Testowe 2',
-    roomId: 'room-1',
-    userId: 'user-1',
-  },
-  {
-    reservationId: 'reservation-8',
-    dateFrom: new Date('2024-12-02T09:00:00').toISOString(),
-    dateTo: new Date('2024-12-02T14:00:00').toISOString(),
-    category: 'spotkanie',
-    description: 'Testowe 2',
-    roomId: 'room-3',
-    userId: 'user-1',
-  }
-]
+import { Reservation, Room } from "@prisma/client"
+import { getNextDayStart } from "./calendar"
 
 // Get Reservations
 
-export function getReservationsByRoom(roomId: Room["id"]): Reservation[] {
-  const outReservations: Reservation[] = reservationsObj.filter((reservation) => (
-    reservation.roomId === roomId
-  ))
-
-  return outReservations
-}
-
-export function getReservationsByDate(reservations: Reservation[], date: string | Date): Reservation[] {
+export function getReservationsByDate(reservations: Reservation[], date: string | Date) {
   const dateIn = new Date(date).toDateString()
-  const outReservations: Reservation[] = reservations.filter((reservation) => (
-    new Date(reservation.dateFrom).toDateString() === dateIn
+  const outReservations = reservations.filter((reservation) => (
+    new Date(reservation.startDate).toDateString() === dateIn
   ))
-  outReservations.sort((a, b) => (a.dateFrom > b.dateFrom) ? 1 : ((b.dateFrom > a.dateFrom) ? -1 : 0))
+  outReservations.sort((a, b) => (a.startDate > b.startDate) ? 1 : ((b.startDate > a.startDate) ? -1 : 0))
 
   return outReservations
 }
 
 // Reservation WeekCalendar Position
 
-export function getReservationWeekTop(dateStart: Date, roomOpenHours: Room["openHours"], parentElementHeight: number): number {
-  const startDay = new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate(), roomOpenHours.from)
-  const endDay = new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate(), roomOpenHours.to + 1)
+export function getReservationWeekTop(dateStart: Date, room: { openFrom: Room["openFrom"], openTo: Room["openTo"] }, parentElementHeight: number): number {
+  const startDay = new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate(), room.openFrom as number)
+  const endDay = new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate(), room.openTo as number + 1)
 
   const totalMillisecondsInDay = endDay.getTime() - startDay.getTime()
   const elapsedMillisecondsInDay = dateStart.getTime() - startDay.getTime()
@@ -107,14 +27,109 @@ export function getReservationWeekTop(dateStart: Date, roomOpenHours: Room["open
   return parentElementHeight * dayProgressPercentage
 }
 
-export function getReservationWeekHeight(dateStart: Date, dateEnd: Date, roomOpenHours: Room["openHours"], parentElementHeight: number): number {
-  const startDay = new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate(), roomOpenHours.from)
-  const endDay = new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate(), roomOpenHours.to + 1)
+export function getReservationWeekBottom(dateEnd: Date, room: { openFrom: Room["openFrom"], openTo: Room["openTo"] }, parentElementHeight: number): number {
+  const startDay = new Date(dateEnd.getFullYear(), dateEnd.getMonth(), dateEnd.getDate(), room.openFrom as number)
+  const endDay = new Date(dateEnd.getFullYear(), dateEnd.getMonth(), dateEnd.getDate(), room.openTo as number + 1)
 
   const totalMillisecondsInDay = endDay.getTime() - startDay.getTime()
-  const durationMilliseconds = dateEnd.getTime() - dateStart.getTime()
+  const leftMillisecondsInDay = endDay.getTime() - dateEnd.getTime()
 
-  const dayProgressPercentage = (durationMilliseconds / totalMillisecondsInDay)
+  const dayProgressPercentage = (leftMillisecondsInDay / totalMillisecondsInDay)
 
   return parentElementHeight * dayProgressPercentage
+}
+
+export function calculateElementPositionStyle(parentLayout: { top: number, left: number, height: number, width: number }) {
+  const windowHeight = typeof window !== "undefined" ? window.innerHeight : 0
+  const windowWidth = typeof window !== "undefined" ? window.innerWidth : 0
+
+  const positionX =
+    (windowHeight / 2) >= parentLayout.top
+      ? `"top":${parentLayout.top}`
+      : `"bottom":${windowHeight - parentLayout.top - parentLayout.height}`
+
+  const positionY =
+    (windowWidth / 2) >= parentLayout.left
+      ? `"left":${parentLayout.left + parentLayout.width + 10}`
+      : `"right":${windowWidth - parentLayout.left + 10}`
+
+  const position = JSON.parse(`{${positionX},${positionY}}`)
+
+  return position
+}
+
+// New Reservation WeekCalendar
+
+export function getDayPartHeight(room: { openFrom: Room["openFrom"], openTo: Room["openTo"] }, parentElementHeight: number, minutesInterval: number): number {
+  const hoursDiff: number = ((room.openTo as number) - (room.openFrom as number)) + 1
+  const hourParts: number = 60 / minutesInterval
+  const dayParts: number = hoursDiff * hourParts
+  const dayPartHeight: number = parentElementHeight / dayParts
+
+  return dayPartHeight
+}
+
+export function getNewReservationWeekTop(mouseY: number, dayPartHeight: number): number {
+  const newReservationWeekPart: number = Math.floor(mouseY / dayPartHeight)
+  const newReservationWeekTop: number = newReservationWeekPart * dayPartHeight
+
+  return newReservationWeekTop
+}
+
+export function getNewReservationWeekBottom(mouseY: number, calendarHeight: number, dayPartHeight: number): number {
+  const newReservationWeekPart: number = Math.floor((calendarHeight - mouseY) / dayPartHeight)
+  const newReservationWeekBottom: number = newReservationWeekPart * dayPartHeight
+
+  return newReservationWeekBottom
+}
+
+export function getNewReservationTimeFrom(isoDate: string, mouseY: number, dayPartHeight: number, roomOpenFrom: Room["openFrom"]): string {
+  const top: number = getNewReservationWeekTop(mouseY, dayPartHeight)
+  const timeFrom: string = getNewReservationTime(isoDate, top, dayPartHeight, roomOpenFrom as number)
+
+  return timeFrom
+}
+
+export function getNewReservationTimeTo(isoDate: string, mouseY: number, calendarHeight: number, dayPartHeight: number, roomOpenFrom: Room["openFrom"]): string {
+  const bottom: number = getNewReservationWeekBottom(mouseY, calendarHeight, dayPartHeight)
+  const timeTo: string = getNewReservationTime(isoDate, calendarHeight - bottom, dayPartHeight, roomOpenFrom as number)
+
+  return timeTo
+}
+
+export function getNewReservationTime(isoDate: string, top: number, dayPartHeight: number, roomOpenFrom: Room["openFrom"]): string {
+  const date: Date = new Date(isoDate)
+  const dayPart: number = top > 0 ? top / dayPartHeight : 0
+  const hoursFromOpen: number = dayPart * (15 / 60)
+  const hoursFromDayStart: number = roomOpenFrom as number + hoursFromOpen
+  const millisecondsFromDayStart: number = hoursFromDayStart * 60 * 60 * 1000
+  const newReservationTime: Date = new Date(date.getTime() + millisecondsFromDayStart)
+
+  return newReservationTime.toISOString()
+}
+
+// Reservation Form
+
+export function getTimesAfterRoomChange(startDate: Date, endDate: Date, roomOpenFrom: Room["openFrom"], roomOpenTo: Room["openTo"]) {
+  const timeMin = new Date(
+    new Date(startDate).setHours(roomOpenFrom || 0, 0, 0, 0)
+  )
+  const timeMax = roomOpenTo
+    ? new Date(new Date(endDate).setHours(roomOpenTo, 0, 0, 0))
+    : getNextDayStart(timeMin)
+  const timeDiff = endDate.getTime() - startDate.getTime()
+
+  if (startDate < timeMin) {
+    const tempEndDate = new Date(timeMin.getTime() + timeDiff)
+    return {
+      startDate: timeMin,
+      endDate: tempEndDate < timeMax ? tempEndDate : timeMax
+    }
+  } else if (endDate > timeMax) {
+    const tempStartDate = new Date(timeMax.getTime() - timeDiff)
+    return {
+      startDate: tempStartDate > timeMin ? tempStartDate : timeMin,
+      endDate: timeMax
+    }
+  }
 }

@@ -1,64 +1,64 @@
 import Image from "next/image"
+import { getMainPicturePath } from "@/lib/room"
+import { RoomParameter, RoomPicture, RoomToRoomParameter, Room as RoomType } from "@prisma/client"
 import RoomCard from "./RoomCard/RoomCard"
 import { useState } from "react"
-import { MdArrowRight } from "react-icons/md"
-import { useCardHookedContext } from "../../context/CardHookedContext"
-import { useSelectedRoomContext } from "@/app/context/SelectedRoomContext"
-import { getMainPicturePath } from "@/lib/room"
+import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams"
+import { useSearchParams } from "next/navigation"
 
 type Props = {
-  room: Room
+  room: ({
+    pictures: RoomPicture[];
+    parameters: ({
+      parameter: RoomParameter;
+    } & RoomToRoomParameter)[];
+  } & RoomType)
 }
 
 export default function Room({ room }: Props) {
-  const { name, pictures } = room
+  const [cardVisible, setCardVisible] = useState(false)
 
-  const { isAnyCardHooked, setIsAnyCardHooked } = useCardHookedContext()
-  const { selectedRoom, setSelectedRoom } = useSelectedRoomContext()
+  const searchParams = useSearchParams()
 
-  const [isHovered, setIsHovered] = useState(false)
-  const [isCardVisible, setIsCardVisible] = useState(false)
-  const [isCardHooked, setIsCardHooked] = useState(false)
+  const updateSearchParams = useUpdateSearchParams()
 
-  const toogleArrowClicked = () => {
-    setIsCardHooked((prev) => !prev)
-    setIsAnyCardHooked((prev) => !prev)
+  const mainPicturePath = getMainPicturePath(room.pictures)
+
+  const selectedRoom = searchParams.get("r")
+
+  const handleClick = () => {
+    if (selectedRoom !== room.id.toString()) {
+      updateSearchParams("r", room.id.toString())
+      if (cardVisible) setCardVisible(false)
+    } else if (!cardVisible) {
+      setCardVisible(true)
+    } else {
+      setCardVisible(false)
+    }
   }
-
-  const mainPicturePath = getMainPicturePath(pictures)
 
   return (
     <div
-      className={`h-20 pl-2 items-center flex gap-2 rounded-md hover:cursor-pointer${selectedRoom === room.id ? ' bg-neutral-800' : ' hover:bg-neutral-700'}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}>
+      className={`h-20 pl-2 items-center flex gap-2 rounded-md hover:cursor-pointer${selectedRoom === room.id.toString() ? ' bg-neutral-800' : ' hover:bg-neutral-700'}`}
+    >
       <div
         className="flex items-center gap-2 w-11/12"
-        onClick={() => setSelectedRoom(room.id)}>
+        onClick={handleClick}
+      >
         <div className="w-4/12">
           <Image
             className="w-auto h-auto rounded-md shadow-[0px_0px_2px_1px] shadow-neutral-500"
             src={mainPicturePath}
-            alt={name}
+            alt={room.name}
             width={640}
             height={640}
-            priority={true}
           />
         </div>
         <div className="w-7/12 text-sm">
-          {name}
+          {room.name}
         </div>
       </div>
-      <div
-        className={`${isAnyCardHooked && !isCardHooked ? 'invisible ' : ''}w-1/12 h-full text-xl content-center rounded-r-md${isCardVisible || isCardHooked ? ' bg-neutral-900 *:scale-125 ' : ''}${!isCardHooked ? ' scale-90' : ''}`}
-        onMouseEnter={() => setIsCardVisible(true)}
-        onMouseLeave={() => setIsCardVisible(false)}
-        onClick={toogleArrowClicked}>
-        <MdArrowRight className={`${isHovered || isCardHooked ? '' : 'hidden '}`} />
-      </div>
-      {
-        <RoomCard visible={(isCardVisible || isCardHooked)} room={room} />
-      }
+      {cardVisible && <RoomCard room={room} setVisible={setCardVisible} />}
     </div>
   )
 }

@@ -1,47 +1,56 @@
+'use client'
+
 import { MdArrowLeft, MdArrowRight } from "react-icons/md"
-import { useFormatter } from "next-intl"
-import { useCalendarPeriodContext } from "../context/CalendarPeriodContext"
-import { useCalendarTypeContext } from "../context/CalendarTypeContext"
-import { getNextPeriod, getPrevPeriod } from "@/lib/calendar"
+import { formatMonthYear } from "@/lib/dateTimeFormats"
+import { getCurrentPeriod, getNextPeriod, getPrevPeriod } from "@/lib/calendar"
+import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams"
 
-export default function PeriodChange() {
-  const { calendarPeriod, setCalendarPeriod } = useCalendarPeriodContext()
-  const { calendarType } = useCalendarTypeContext()
+type Props = {
+  calendarPeriod: string,
+  calendarType: Calendar["type"],
+  className?: string,
+}
 
-  const format = useFormatter()
+export default function PeriodChange({ calendarPeriod, calendarType, className }: Props) {
+  const updateSearchParams = useUpdateSearchParams()
 
-  const formatedMonthYear = () => {
-    if (!calendarPeriod) return
+  const formatedMonthYear = formatMonthYear(calendarPeriod)
 
-    let formatedMonth =
-      format.dateTime(new Date(calendarPeriod), {
-        month: 'long',
-        year: 'numeric',
-      })
+  const handlePrevPeriod = () => {
+    updateSearchParams("cp", getPrevPeriod(new Date(calendarPeriod), calendarType).valueOf().toString())
+  }
 
-    formatedMonth = formatedMonth[0].toUpperCase() + formatedMonth.slice(1)
+  const handleCurrentPeriod = () => {
+    updateSearchParams("cp", getCurrentPeriod(new Date(), calendarType).valueOf().toString())
+  }
 
-    return formatedMonth
+  const handleNextPeriod = () => {
+    updateSearchParams("cp", getNextPeriod(new Date(calendarPeriod), calendarType).valueOf().toString())
   }
 
   return (
-    <div className="bg-neutral-600 w-64 flex flex-row items-center border border-neutral-400 rounded-2xl">
-      <button
-        className="h-full text-3xl hover:*:scale-125"
-        onClick={() => setCalendarPeriod(getPrevPeriod(calendarPeriod, calendarType.id))}>
-        <MdArrowLeft />
-      </button>
-      <div
-        className="bg-neutral-500 text-sm font-bold border-x border-neutral-400 w-full h-full flex items-center justify-center hover:cursor-pointer"
-        onClick={() => setCalendarPeriod(new Date())}
-        title="Dzisiaj">
-        {formatedMonthYear()}
+    <div className={`flex ${className}`}>
+      <div className="bg-neutral-600 w-64 flex flex-row items-center border border-neutral-400 rounded-2xl">
+        <button
+          type="button"
+          className="h-full text-3xl"
+          onClick={handlePrevPeriod}>
+          <MdArrowLeft className="hover:scale-125" />
+        </button>
+        <div
+          className="flex bg-neutral-500 text-sm font-bold border-x border-neutral-400 w-full h-full items-center justify-center hover:cursor-pointer"
+          onClick={handleCurrentPeriod}
+          title="Dzisiaj"
+        >
+          {formatedMonthYear}
+        </div>
+        <button
+          type="button"
+          className="h-full text-3xl"
+          onClick={handleNextPeriod}>
+          <MdArrowRight className="hover:scale-125" />
+        </button>
       </div>
-      <button
-        className="h-full text-3xl hover:*:scale-125"
-        onClick={() => setCalendarPeriod(getNextPeriod(calendarPeriod, calendarType.id))}>
-        <MdArrowRight />
-      </button>
     </div>
   )
 }

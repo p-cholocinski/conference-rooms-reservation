@@ -1,17 +1,17 @@
 import { getHoursRange } from "@/lib/room"
-import { useEffect, useState } from "react"
+import { Room } from "@prisma/client"
+import { useMemo } from "react"
 
 type Props = {
-  roomOpenHours: Room["openHours"]
+  openFrom: Room["openFrom"],
+  openTo: Room["openTo"],
 }
 
-export default function Hours({ roomOpenHours }: Props) {
+export default function Hours({ openFrom, openTo }: Props) {
 
-  const [hours, setHours] = useState<string[]>([])
-
-  useEffect(() => {
-    setHours(getHoursRange(roomOpenHours.from, roomOpenHours.to))
-  }, [roomOpenHours])
+  const hours: string[] = useMemo(() => {
+    return getHoursRange(openFrom, openTo)
+  }, [openFrom, openTo])
 
   return (
     <div
