@@ -15,7 +15,7 @@ export default function TypeChange({ calendarType }: Props) {
       {calendars.map((calendar) => (
         <button
           key={calendar.type}
-          className={`w-full h-full rounded-2xl${calendarType === calendar.type ? ' bg-neutral-400 font-bold' : ''}`}
+          className={`w-full h-full rounded-2xl hover:cursor-pointer ${calendarType === calendar.type ? 'bg-neutral-400 font-bold' : ''}`}
           onClick={() => { updateSearchParams("ct", calendar.type) }}>
           {calendar.name}
         </button>

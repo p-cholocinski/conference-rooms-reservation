@@ -33,7 +33,7 @@ export default function PeriodChange({ calendarPeriod, calendarType, className }
       <div className="bg-neutral-600 w-64 flex flex-row items-center border border-neutral-400 rounded-2xl">
         <button
           type="button"
-          className="h-full text-3xl"
+          className="h-full text-3xl hover:cursor-pointer"
           onClick={handlePrevPeriod}>
           <MdArrowLeft className="hover:scale-125" />
         </button>
@@ -46,7 +46,7 @@ export default function PeriodChange({ calendarPeriod, calendarType, className }
         </div>
         <button
           type="button"
-          className="h-full text-3xl"
+          className="h-full text-3xl hover:cursor-pointer"
           onClick={handleNextPeriod}>
           <MdArrowRight className="hover:scale-125" />
         </button>

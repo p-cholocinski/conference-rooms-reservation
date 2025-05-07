@@ -1,4 +1,4 @@
-import { Dispatch, MouseEvent, SetStateAction, useState } from "react"
+import { MouseEvent, useState } from "react"
 import useMouseup from "@/hooks/useMouseup"
 import {
   getDayPartHeight,
@@ -8,9 +8,8 @@ import {
   getReservationWeekBottom,
   getReservationWeekTop
 } from "@/lib/reservation"
-import ReservationForm from "@/app/components/Forms/ReservationForm"
 import { formatTimeRange } from "@/lib/dateTimeFormats"
-import { ReservationCategory, Room } from "@prisma/client"
+import { Reservation, ReservationCategory, Room } from "@prisma/client"
 import { useSearchParams } from "next/navigation"
 
 type Props = {
@@ -18,64 +17,100 @@ type Props = {
   room: { openFrom: Room["openFrom"], openTo: Room["openTo"] },
   calendarHeight: number,
   initialTime: string,
-  setInitialTime: Dispatch<SetStateAction<string>>
-  rooms: { id: Room["id"], name: Room["name"], openFrom: Room["openFrom"], openTo: Room["openTo"] }[]
-  reservationCategories: { id: ReservationCategory["id"], name: ReservationCategory["name"] }[]
+  dayReservations: ({ category: ReservationCategory } & Reservation)[],
+  reservationFormData: ReservationFormType,
+  setInitialTime: (initialTime: string) => void,
+  setReservationFormData: (data: ReservationFormType | null) => void,
 }
 
-export default function NewReservationWeek({ date, room, calendarHeight, initialTime, setInitialTime, rooms, reservationCategories }: Props) {
-  const [timeFrom, setTimeFrom] = useState<string>(initialTime)
-  const [timeTo, setTimeTo] = useState<string>(new Date(new Date(initialTime).getTime() + (15 * 60 * 1000)).toISOString())
-  const [stopChanging, setStopChanging] = useState<boolean>(false)
+export default function NewReservationWeek({ date, room, calendarHeight, initialTime, dayReservations, reservationFormData, setInitialTime, setReservationFormData }: Props) {
+  const [overlaps, setOverlaps] = useState<boolean>(false)
+
+  const timeFrom: string = (reservationFormData.startDate as Date).toISOString()
+  const timeTo: string = (reservationFormData.endDate as Date).toISOString()
 
   const roomIdParam = useSearchParams().get("r")
   const roomId = roomIdParam ? parseInt(roomIdParam) : undefined
 
-  useMouseup(() => setStopChanging(true))
+  useMouseup(() => {
+    setReservationFormData({
+      ...reservationFormData,
+      roomId: roomId,
+      visible: true,
+    })
+    setInitialTime("")
+  })
 
   const dayPartHeight: number = getDayPartHeight(room, calendarHeight, 15)
   const initialTop: number = getReservationWeekTop(new Date(initialTime), room, calendarHeight)
   const elementTop: number = getReservationWeekTop(new Date(timeFrom), room, calendarHeight)
   const elementBottom: number = getReservationWeekBottom(new Date(timeTo), room, calendarHeight)
   const elementHeight: number = calendarHeight - elementTop - elementBottom
-  const partsCount: number = (elementHeight / dayPartHeight)
+  const partsCount: number = Math.round((elementHeight / dayPartHeight))
 
   const formatedTimeRange = formatTimeRange(timeFrom, timeTo)
 
-  const restartStates = () => {
-    setInitialTime("")
-    setTimeFrom("")
-    setTimeTo("")
-    setStopChanging(false)
-  }
-
   const handleMouseMoveOutside = (e: MouseEvent<HTMLDivElement>) => {
-    if (!stopChanging && initialTime !== "") {
+    if (initialTime !== "" && !overlaps) {
       const mouseY = e.nativeEvent.offsetY
       const changeTop: boolean = mouseY < initialTop
+
       const time: string = changeTop
         ? getNewReservationTimeFrom(date, mouseY, dayPartHeight, room.openFrom as number)
         : getNewReservationTimeTo(date, mouseY, calendarHeight, dayPartHeight, room.openFrom as number)
 
-      if (changeTop) { setTimeFrom(time) } else { setTimeTo(time) }
+      const isOverlaps: boolean = changeTop
+        ? dayReservations.find((dayReservation) => dayReservation.endDate < new Date(timeTo) && dayReservation.endDate > new Date(time)) !== undefined
+        : dayReservations.find((dayReservation) => dayReservation.startDate < new Date(time) && dayReservation.startDate > new Date(timeFrom)) !== undefined
+
+      if (!isOverlaps) {
+        if (changeTop) {
+          setReservationFormData({
+            ...reservationFormData,
+            startDate: new Date(time),
+            endDate: new Date(new Date(initialTime).getTime() + (15 * 60 * 1000)),
+          })
+        } else {
+          setReservationFormData({
+            ...reservationFormData,
+            startDate: new Date(initialTime),
+            endDate: new Date(time),
+          })
+        }
+      } else {
+        setOverlaps(true)
+      }
     }
   }
 
   const handleMouseMoveInside = (e: MouseEvent<HTMLDivElement>) => {
-    if (!stopChanging && partsCount > 1) {
+    if (overlaps === true) setOverlaps(false)
+
+    if (initialTime !== "" && Math.round(partsCount) > 1) {
       const changeTop: boolean = initialTop !== elementTop
       const mouseY = e.nativeEvent.offsetY
-      const positionY: number = changeTop
-        ? elementTop + (Math.floor(mouseY / dayPartHeight) * dayPartHeight)
-        : elementBottom + (Math.floor((elementHeight - mouseY) / dayPartHeight) * dayPartHeight)
-      const time: string = changeTop
-        ? getNewReservationTime(date, positionY, dayPartHeight, room.openFrom as number)
-        : getNewReservationTime(date, calendarHeight - positionY, dayPartHeight, room.openFrom as number)
+      const endPartHeight = dayPartHeight / 3
 
-      if (changeTop) {
-        if (positionY !== elementTop) setTimeFrom(time)
-      } else {
-        if (positionY !== elementBottom) setTimeTo(time)
+      if (mouseY > endPartHeight && mouseY < (elementHeight - endPartHeight)) {
+        const positionY: number = changeTop
+          ? elementTop + (Math.floor(mouseY / dayPartHeight) * dayPartHeight)
+          : elementBottom + (Math.floor((elementHeight - mouseY) / dayPartHeight) * dayPartHeight)
+
+        const time: string = changeTop
+          ? getNewReservationTime(date, positionY, dayPartHeight, room.openFrom as number)
+          : getNewReservationTime(date, calendarHeight - positionY, dayPartHeight, room.openFrom as number)
+
+        if (changeTop) {
+          if (positionY !== elementTop) setReservationFormData({
+            ...reservationFormData,
+            startDate: new Date(time),
+          })
+        } else {
+          if (positionY !== elementBottom) setReservationFormData({
+            ...reservationFormData,
+            endDate: new Date(time),
+          })
+        }
       }
     }
   }
@@ -97,16 +132,6 @@ export default function NewReservationWeek({ date, room, calendarHeight, initial
         >
           {formatedTimeRange}
         </div>
-        {stopChanging &&
-          <ReservationForm
-            initRoomId={roomId}
-            initDate={new Date(date)}
-            initStartDate={new Date(timeFrom)}
-            initEndDate={new Date(timeTo)}
-            onClose={restartStates}
-            rooms={rooms}
-            reservationCategories={reservationCategories}
-          />}
       </div>
     </>
   )

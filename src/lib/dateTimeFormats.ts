@@ -29,10 +29,10 @@ export function formatTime(time: Date | string | undefined) {
   return format.format(parsedTime)
 }
 
-export const formatDateTimeRange = (
+export function formatDateTimeRange(
   dateTimeStart: Date | string | undefined,
   dateTimeEnd: Date | string | undefined,
-): string => {
+): string {
   const format = new Intl.DateTimeFormat("pl-PL", {
     weekday: 'long',
     day: "numeric",
@@ -53,9 +53,9 @@ export const formatDateTimeRange = (
   return formatedDate
 }
 
-export const formatMonthYear = (
+export function formatMonthYear(
   date: Date | string | undefined
-) => {
+) {
   const format = new Intl.DateTimeFormat("pl-PL", {
     month: 'long',
     year: 'numeric',
@@ -75,10 +75,10 @@ export const formatMonthYear = (
   return formatedMonth
 }
 
-export const formatTimeRange = (
+export function formatTimeRange(
   timeStart: Date | string | undefined,
   timeEnd: Date | string | undefined,
-) => {
+) {
   const format = new Intl.DateTimeFormat("pl-PL", {
     hour: "numeric",
     minute: "numeric",
@@ -97,13 +97,13 @@ export const formatTimeRange = (
   return formatedTime
 }
 
-export const parseDate = (date: Date | string | undefined): Date | null => {
+export function parseDate(date: Date | string | undefined): Date | null {
   if (!date) return null
   const parsed = typeof date === "string" ? new Date(date) : date
   return parsed
 }
 
-export const parseDateTime = (date: Date | string | undefined): Date | null => {
+export function parseDateTime(date: Date | string | undefined): Date | null {
   if (!date) return null
   const parsed = typeof date === "string" ? new Date(date) : date
   return isNaN(parsed.getTime()) ? null : parsed

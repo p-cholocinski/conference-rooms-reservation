@@ -13,7 +13,7 @@ export function useUpdateSearchParams() {
       if (!params.has(name, value)) {
         params.set(name, value)
 
-        router.push(pathname + '?' + params.toString())
+        router.replace(pathname + '?' + params.toString())
       }
     },
     [router, pathname, searchParams]

@@ -8,10 +8,11 @@ type Props = {
   options: { value: string | number, label: string }[],
   value?: string | number,
   displayValue?: string | number,
+  errorMsg?: string,
   onChange: (value: string | number) => void,
 }
 
-export default function SelectInput({ name, placeholder, options, value, displayValue, onChange }: Props) {
+export default function SelectInput({ name, placeholder, options, value, displayValue, errorMsg, onChange }: Props) {
   const [showDropDown, setShowDropDown] = useState(false)
 
   const selectInputRef = useRef<HTMLDivElement | null>(null)
@@ -35,6 +36,7 @@ export default function SelectInput({ name, placeholder, options, value, display
         value={value}
         displayValue={displayValue}
         readOnly={true}
+        errorMsg={errorMsg}
         onClick={toggleDropDown}
       />
       {showDropDown &&

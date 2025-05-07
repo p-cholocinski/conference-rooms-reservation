@@ -15,19 +15,35 @@ type Props = {
     category: ReservationCategory,
   } & Reservation),
   calendarHeight: number,
-  rooms: { id: Room["id"], name: Room["name"], openFrom: Room["openFrom"], openTo: Room["openTo"] }[]
-  reservationCategories: { id: ReservationCategory["id"], name: ReservationCategory["name"] }[]
+  reservationFormData: ReservationFormType | null,
+  setReservationFormData: (data: ReservationFormType | null) => void,
 }
 
-export default function ReservationWeek({ room, dayReservation, calendarHeight, rooms, reservationCategories }: Props) {
+export default function ReservationWeek({ room, dayReservation, calendarHeight, reservationFormData, setReservationFormData }: Props) {
   const [reservationCardVisible, setReservationCardVisible] = useState<boolean>(false)
 
   const reservationWeekRef = useRef<HTMLDivElement>(null)
 
-  const formatedTimeRange = formatTimeRange(dayReservation.startDate, dayReservation.endDate)
+  const isEditing = reservationFormData?.reservationId === dayReservation.id
 
-  const elementTop: number = getReservationWeekTop(dayReservation.startDate, room, calendarHeight)
-  const elementBottom: number = getReservationWeekBottom(dayReservation.endDate, room, calendarHeight)
+  const {
+    description,
+    startDate,
+    endDate,
+  } = isEditing ? {
+    description: reservationFormData?.description || dayReservation.description,
+    startDate: reservationFormData?.startDate || dayReservation.startDate,
+    endDate: reservationFormData?.endDate || dayReservation.endDate,
+  } : {
+      description: dayReservation.description,
+      startDate: dayReservation.startDate,
+      endDate: dayReservation.endDate,
+    }
+
+  const formatedTimeRange = formatTimeRange(startDate, endDate)
+
+  const elementTop: number = getReservationWeekTop(startDate, room, calendarHeight)
+  const elementBottom: number = getReservationWeekBottom(endDate, room, calendarHeight)
   const elementHeight: number = calendarHeight - elementTop - elementBottom
   const lineHeight: number = 16
   const lineCount: number = Math.floor((elementHeight - 8) / lineHeight)
@@ -35,7 +51,7 @@ export default function ReservationWeek({ room, dayReservation, calendarHeight, 
 
   return (
     <div
-      className={`absolute left-0 right-0 mx-1 text-xs rounded-md overflow-hidden hover:cursor-pointer hover:bg-neutral-700 ${reservationCardVisible ? 'bg-neutral-800' : 'bg-neutral-500'}`}
+      className={`absolute left-0 right-0 mx-1 text-xs rounded-md overflow-hidden hover:cursor-pointer hover:bg-neutral-700 ${reservationCardVisible || isEditing ? 'bg-neutral-800' : 'bg-neutral-500'}`}
       style={{ top: elementTop + 'px', bottom: elementBottom + 'px' }}
       ref={reservationWeekRef}
     >
@@ -47,7 +63,7 @@ export default function ReservationWeek({ room, dayReservation, calendarHeight, 
           className="font-bold"
           style={{ maxHeight: maxDescHeight }}
         >
-          {dayReservation.description}
+          {description}
         </div>
         <div className="whitespace-nowrap">
           {formatedTimeRange}
@@ -61,9 +77,9 @@ export default function ReservationWeek({ room, dayReservation, calendarHeight, 
               ? reservationWeekRef.current.getBoundingClientRect()
               : { top: 0, left: 0, height: 0, width: 0 }
           }
-          rooms={rooms}
-          reservationCategories={reservationCategories}
           onClose={() => setReservationCardVisible(false)}
+          reservationFormData={reservationFormData}
+          setReservationFormData={setReservationFormData}
         />}
     </div>
   )

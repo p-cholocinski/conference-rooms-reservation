@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from "react"
+import { useActionState, useRef } from "react"
+import { useSession } from "next-auth/react"
 import Form from "next/form"
 import FormLayout from "./FormLayout"
 import DateInput from "@/components/inputs/DateInput"
@@ -8,36 +9,44 @@ import TextInput from "@/components/inputs/TextInput"
 import TimeInput from "@/components/inputs/TimeInput"
 import SelectInput from "@/components/inputs/SelectInput"
 import Button from "@/components/Button"
-import { createReservation } from "@/app/actions/createReservation"
+import { upsertReservation } from "@/app/actions/reservation"
+import { withClientCallback } from "@/app/actions/withClientCallback"
 import { getDayStart, getNextDayStart, getRoundedToQuarterTime } from "@/lib/calendar"
 import { getTimesAfterRoomChange } from "@/lib/reservation"
-import { useSession } from "next-auth/react"
-import { Reservation, ReservationCategory, Room } from "@prisma/client"
+import { ReservationCategory, Room } from "@prisma/client"
+import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams"
 
 type Props = {
-  initDescription?: Reservation["description"],
-  initDate?: Reservation["startDate"],
-  initStartDate?: Reservation["startDate"],
-  initEndDate?: Reservation["endDate"],
-  initRoomId?: Room["id"],
-  initCategoryId?: ReservationCategory["id"],
+  reservationFormData: ReservationFormType,
   rooms: { id: Room["id"], name: Room["name"], openFrom: Room["openFrom"], openTo: Room["openTo"] }[]
   reservationCategories: { id: ReservationCategory["id"], name: ReservationCategory["name"] }[]
-  onClose: () => void,
+  setReservationFormData: (data: ReservationFormType | null) => void
 }
 
-export default function ReservationForm({ initDescription, initDate, initStartDate, initEndDate, initRoomId, initCategoryId, rooms, reservationCategories, onClose }: Props) {
+export default function ReservationForm({ reservationFormData, rooms, reservationCategories, setReservationFormData }: Props) {
 
-  const [room, setRoom] = useState(() => initRoomId ? rooms.find(room => room.id === initRoomId) : undefined)
-  const [startDate, setStartDate] = useState<Date>(initStartDate ? getRoundedToQuarterTime(new Date(initStartDate)) : getRoundedToQuarterTime(new Date()))
-  const [endDate, setEndDate] = useState<Date>(initEndDate ? getRoundedToQuarterTime(new Date(initEndDate)) : new Date(startDate.getTime() + 30 * 60 * 1000))
-  const [categoryId, setCategoryId] = useState<ReservationCategory["id"] | string | undefined>(initCategoryId)
+  const [state, formAction, pending] = useActionState(
+    withClientCallback(
+      upsertReservation,
+      reservationFormData.onClose,
+      reservationFormData.reservationId,
+    )
+    , undefined
+  )
+
+  const descriptionRef = useRef<string>(reservationFormData.description || "") // useRef is used to avoid re-rendering the component on every change
+  const date = reservationFormData.date ? getDayStart(new Date(reservationFormData.date)) : getDayStart(new Date())
+  const startDate = reservationFormData.startDate ? getRoundedToQuarterTime(new Date(reservationFormData.startDate)) : getRoundedToQuarterTime(new Date())
+  const endDate = reservationFormData.endDate ? getRoundedToQuarterTime(new Date(reservationFormData.endDate)) : new Date(startDate.getTime() + 30 * 60 * 1000)
+  const room = reservationFormData.roomId ? rooms.find(room => room.id === reservationFormData.roomId) : undefined
+  const categoryId = reservationFormData.categoryId
 
   const { data: session } = useSession()
-
-  const date = initDate ? getDayStart(new Date(initDate)) : getDayStart(new Date())
+  const updateSearchParams = useUpdateSearchParams()
 
   const timeMin = new Date(new Date(date).setHours(room?.openFrom || 0, 0, 0, 0))
+
+  const timeMinEndDate = new Date(startDate.getTime() + 15 * 60 * 1000)
 
   const timeMax = room ? new Date(new Date(date).setHours(room?.openTo, 0, 0, 0)) : getNextDayStart(timeMin)
 
@@ -47,12 +56,30 @@ export default function ReservationForm({ initDescription, initDate, initStartDa
 
   const categoryName = categoryId ? reservationCategories.find((reservationCategory) => reservationCategory.id === categoryId)?.name : undefined
 
+  const handleChangeDate = (date: Date) => {
+    const startDateDayStart: number = getDayStart(startDate).getTime()
+    const newStartDate = new Date(date.getTime() + (startDate.getTime() - startDateDayStart))
+    const newEndDate = new Date(date.getTime() + (endDate.getTime() - startDateDayStart))
+
+    setReservationFormData({
+      ...reservationFormData,
+      date: date,
+      startDate: newStartDate,
+      endDate: newEndDate,
+    })
+
+    updateSearchParams("cp", date.valueOf().toString())
+  }
+
   const handleChangeStartDate = (time: Date) => {
     const timeDiff = endDate.getTime() - startDate.getTime()
     const tempEndDate = new Date(time.getTime() + timeDiff)
 
-    setStartDate(time)
-    setEndDate(tempEndDate < timeMax ? tempEndDate : timeMax)
+    setReservationFormData({
+      ...reservationFormData,
+      startDate: time,
+      endDate: tempEndDate < timeMax ? tempEndDate : timeMax,
+    })
   }
 
   const handleChangeRoom = (roomId: Room["id"] | string) => {
@@ -61,29 +88,41 @@ export default function ReservationForm({ initDescription, initDate, initStartDa
     if (room) {
       const times = getTimesAfterRoomChange(startDate, endDate, room?.openFrom, room?.openTo)
 
-      if (times) {
-        setStartDate(times.startDate)
-        setEndDate(times.endDate)
-      }
+      setReservationFormData({
+        ...reservationFormData,
+        startDate: times?.startDate ?? startDate,
+        endDate: times?.endDate ?? endDate,
+        roomId: room.id,
+      })
 
-      setRoom(room)
+      updateSearchParams("r", room.id.toString())
     }
   }
 
+  const handleSubmit = () => {
+    setReservationFormData({
+      ...reservationFormData,
+      description: descriptionRef.current,
+    })
+  }
+
   return (
-    <FormLayout onClose={onClose}>
-      <Form action={createReservation} >
+    <FormLayout onClose={reservationFormData.onClose}>
+      <Form action={formAction} onSubmit={handleSubmit} >
         <div className="flex flex-col gap-4">
           <TextInput
             name="description"
             placeholder="Opis"
-            value={initDescription}
+            value={descriptionRef.current}
+            errorMsg={state?.errors?.description?.[0]}
+            onChange={(value: string) => descriptionRef.current = value}
           />
           <div className="flex gap-2">
             <DateInput
               name="date"
               placeholder="Data"
               date={date}
+              onChange={handleChangeDate}
             />
             <TimeInput
               name="startDate"
@@ -91,15 +130,22 @@ export default function ReservationForm({ initDescription, initDate, initStartDa
               time={startDate}
               timeMin={timeMin}
               timeMax={timeMax}
+              errorMsg={state?.errors?.startDate?.[0]}
               onChange={handleChangeStartDate}
             />
             <TimeInput
               name="endDate"
               placeholder="Do"
               time={endDate}
-              timeMin={startDate}
+              timeMin={timeMinEndDate}
               timeMax={timeMax}
-              onChange={setEndDate}
+              errorMsg={state?.errors?.endDate?.[0]}
+              onChange={(time: Date) => {
+                setReservationFormData({
+                  ...reservationFormData,
+                  endDate: time,
+                })
+              }}
             />
           </div>
           <SelectInput
@@ -108,6 +154,7 @@ export default function ReservationForm({ initDescription, initDate, initStartDa
             options={roomsList}
             value={room?.id}
             displayValue={room?.name}
+            errorMsg={state?.errors?.roomId?.[0]}
             onChange={handleChangeRoom}
           />
           <SelectInput
@@ -116,20 +163,28 @@ export default function ReservationForm({ initDescription, initDate, initStartDa
             options={categories}
             value={categoryId}
             displayValue={categoryName}
-            onChange={setCategoryId}
+            errorMsg={state?.errors?.categoryId?.[0]}
+            onChange={(value: ReservationCategory["id"] | string) => {
+              setReservationFormData({
+                ...reservationFormData,
+                categoryId: value as number,
+              })
+            }}
           />
           <TextInput
             name="userId"
             placeholder="Użytkownik"
             value={session?.user?.id}
             displayValue={session?.user?.name as string}
+            errorMsg={state?.errors?.userId?.[0]}
             readOnly={true}
           />
           <Button
             className="w-1/4 self-end"
             type="submit"
+            disabled={pending}
           >
-            Zapisz
+            {pending ? "..." : "Zapisz"}
           </Button>
         </div>
       </Form>

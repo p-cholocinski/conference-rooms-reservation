@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { v4 as uuidv4 } from 'uuid'
 
-type Toast = {
+export type Toast = {
   id: string
   type: "success" | "error" | "info"
   message: string

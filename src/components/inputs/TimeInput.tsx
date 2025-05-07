@@ -10,10 +10,11 @@ type Props = {
   time?: Date,
   timeMin?: Date,
   timeMax?: Date,
+  errorMsg?: string,
   onChange: (time: Date) => void,
 }
 
-export default function TimeInput({ name, placeholder, time, timeMin, timeMax, onChange }: Props) {
+export default function TimeInput({ name, placeholder, time, timeMin, timeMax, errorMsg, onChange }: Props) {
   const [showDropDown, setShowDropDown] = useState<boolean>(false)
 
   const timeInputRef = useRef<HTMLDivElement | null>(null)
@@ -46,6 +47,7 @@ export default function TimeInput({ name, placeholder, time, timeMin, timeMax, o
         value={time?.toISOString()}
         displayValue={formatTime(time)}
         readOnly={true}
+        errorMsg={errorMsg}
         onClick={toggleDropDown}
       />
       {showDropDown &&

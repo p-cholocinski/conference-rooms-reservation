@@ -1,17 +1,18 @@
 import { MouseEvent, useState } from "react"
 import { getDayPartHeight, getNewReservationTimeFrom } from "@/lib/reservation"
 import NewReservationWeek from "./NewReservationWeek"
-import { ReservationCategory, Room } from "@prisma/client"
+import { Reservation, ReservationCategory, Room } from "@prisma/client"
 
 type Props = {
   date: string,
   room: { openFrom: Room["openFrom"], openTo: Room["openTo"] },
   calendarHeight: number,
-  rooms: { id: Room["id"], name: Room["name"], openFrom: Room["openFrom"], openTo: Room["openTo"] }[]
-  reservationCategories: { id: ReservationCategory["id"], name: ReservationCategory["name"] }[]
+  dayReservations: ({ category: ReservationCategory } & Reservation)[],
+  reservationFormData: ReservationFormType | null,
+  setReservationFormData: (data: ReservationFormType | null) => void,
 }
 
-export default function NewReservationWeekHandler({ date, room, calendarHeight, rooms, reservationCategories }: Props) {
+export default function NewReservationWeekHandler({ date, room, calendarHeight, dayReservations, reservationFormData, setReservationFormData }: Props) {
   const [initialTime, setInitialTime] = useState<string>("")
 
   const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
@@ -21,25 +22,33 @@ export default function NewReservationWeekHandler({ date, room, calendarHeight, 
       const initialTime: string = getNewReservationTimeFrom(date, mouseY, dayPartHeight, room.openFrom as number)
 
       setInitialTime(initialTime)
+
+      setReservationFormData({
+        ...reservationFormData,
+        date: new Date(date),
+        startDate: new Date(initialTime),
+        endDate: new Date(new Date(initialTime).getTime() + (15 * 60 * 1000)),
+      })
     }
   }
 
   return (
     <>
       <div
-        className={`h-full w-full ${initialTime !== "" ? 'absolute' : ''}`}
+        className={`h-full w-full ${reservationFormData?.date ? 'absolute' : ''}`}
         onMouseDown={(e) => handleMouseDown(e)}
       >
       </div>
-      {initialTime !== "" &&
+      {(!reservationFormData?.reservationId && reservationFormData?.date?.toISOString() === date) &&
         <NewReservationWeek
           date={date}
           calendarHeight={calendarHeight}
           room={room}
           initialTime={initialTime}
+          dayReservations={dayReservations}
+          reservationFormData={reservationFormData}
           setInitialTime={setInitialTime}
-          rooms={rooms}
-          reservationCategories={reservationCategories}
+          setReservationFormData={setReservationFormData}
         />
       }
     </>

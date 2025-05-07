@@ -7,10 +7,12 @@ type Props = {
   value?: string | number,
   displayValue?: string | number,
   readOnly?: boolean,
+  errorMsg?: string,
+  onChange?: (value: string) => void,
   onClick?: () => void,
 }
 
-export default function TextInput({ name, placeholder, type = "text", value, displayValue, readOnly, onClick }: Props) {
+export default function TextInput({ name, placeholder, type = "text", value, displayValue, readOnly, errorMsg, onChange, onClick }: Props) {
 
   const displayName = name + (displayValue ? "-displayOnly" : "")
 
@@ -22,7 +24,7 @@ export default function TextInput({ name, placeholder, type = "text", value, dis
       onClick={onClick}
     >
       <input
-        className={`block px-2 pt-3 pb-2 border border-neutral-600 rounded-sm outline-none bg-transparent w-full focus:border-neutral-400 peer ${readOnly && "cursor-pointer"}`}
+        className={`block px-2 pt-3 pb-2 border border-neutral-600 rounded-sm outline-none bg-transparent w-full focus:border-neutral-400 peer ${readOnly && "cursor-pointer"} ${errorMsg ? "border-red-900" : ""}`}
         placeholder=" "
         type={type}
         autoComplete="off"
@@ -31,6 +33,7 @@ export default function TextInput({ name, placeholder, type = "text", value, dis
         value={readOnly ? inputValue : undefined}
         readOnly={readOnly}
         defaultValue={!readOnly ? inputValue : undefined}
+        onChange={(!readOnly && onChange) ? (e) => onChange(e.target.value) : undefined}
       />
       <label
         htmlFor={displayName}
@@ -38,6 +41,11 @@ export default function TextInput({ name, placeholder, type = "text", value, dis
       >
         {placeholder}
       </label>
+      <p
+        className="absolute left-2 -translate-y-1/2 bg-neutral-800 text-xs px-1 text-red-600"
+      >
+        {errorMsg}
+      </p>
       {displayValue && (
         <input
           type="hidden"

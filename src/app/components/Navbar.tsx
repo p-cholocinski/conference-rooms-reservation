@@ -15,7 +15,7 @@ export default async function Navbar() {
         </h1>
         <div className="flex flex-row items-center text-neutral-200">
           {session?.user && (
-            <div className="flex h-3/4 translate-x-3 items-center bg-neutral-500 text-lg border-2 border-neutral-200 px-5 rounded-l-full select-none">
+            <div className="flex h-4/6 translate-x-3 items-center bg-neutral-500 text-base border-1 border-neutral-200 px-5 rounded-l-full select-none">
               {session.user.name}
             </div>
           )}

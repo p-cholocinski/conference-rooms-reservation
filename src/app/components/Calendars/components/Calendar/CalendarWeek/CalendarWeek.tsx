@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import WeekRow from "@/components/WeekRow";
 import Hours from "./Hours";
-import DayWeek from "./DayWeek";
+import DaysWeek from "./DaysWeek";
 import useResizeObserver from "@/hooks/useResizeObserver";
 import DaysRow from "./DaysRow";
 import { Reservation, ReservationCategory, Room } from "@prisma/client";
@@ -42,19 +42,14 @@ export default function CalendarWeek({ calendarDays, room, reservations, rooms, 
           className="flex relative min-h-full max-h-[1200px] mr-1"
         >
           <Hours openFrom={room.openFrom} openTo={room.openTo} />
-          <div className="grid grid-cols-7 w-full">
-            {calendarDays.map((weekDay) => (
-              <DayWeek
-                key={weekDay.date}
-                calendarDay={weekDay}
-                room={room}
-                reservations={reservations}
-                calendarHeight={calendarHeight}
-                rooms={rooms}
-                reservationCategories={reservationCategories}
-              />
-            ))}
-          </div>
+          <DaysWeek
+            calendarDays={calendarDays}
+            room={room}
+            reservations={reservations}
+            calendarHeight={calendarHeight}
+            rooms={rooms}
+            reservationCategories={reservationCategories}
+          />
         </div>
       </div>
     </div>

@@ -7,16 +7,21 @@ type Props = {
   name: string,
   placeholder: string,
   date: Date | string,
+  errorMsg?: string,
+  onChange?: (date: Date) => void,
 }
 
-export default function DateInput({ name, placeholder, date }: Props) {
-  const [selectedDate, setSelectedDate] = useState<string>(new Date(date).toISOString())
+export default function DateInput({ name, placeholder, date, errorMsg, onChange }: Props) {
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false)
 
   const dateInputRef = useRef<HTMLDivElement | null>(null)
 
+  const selectedDate = new Date(date).toISOString()
+
   const handleSelectedDate = (date: string | null) => {
-    if (date) setSelectedDate(date)
+    if (date) {
+      if (onChange) onChange(new Date(date))
+    }
     setShowDatePicker(false)
   }
 
@@ -33,6 +38,7 @@ export default function DateInput({ name, placeholder, date }: Props) {
         value={selectedDate}
         displayValue={formatDate(selectedDate)}
         readOnly={true}
+        errorMsg={errorMsg}
         onClick={toggleDatePicker}
       />
       {showDatePicker &&

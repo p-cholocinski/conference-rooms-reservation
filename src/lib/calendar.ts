@@ -89,10 +89,7 @@ export function getPrevPeriod(date: Date, calendarType: Calendar["type"] = "mont
 }
 
 export function getCurrentPeriod(date: Date, calendarType: Calendar["type"] = "month"): Date {
-  const currentDate =
-    calendarType === "month"
-      ? new Date(date.getFullYear(), date.getMonth(), 1)
-      : new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  const currentDate = new Date(date.getFullYear(), date.getMonth(), date.getDate())
   return currentDate
 }
 

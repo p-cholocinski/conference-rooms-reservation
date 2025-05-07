@@ -10,3 +10,15 @@ type Calendar = {
   name: string,
   dayCount: number,
 }
+
+type ReservationFormType = {
+  description?: string,
+  date?: Date,
+  startDate?: Date,
+  endDate?: Date,
+  roomId?: number,
+  categoryId?: number,
+  reservationId?: number,
+  visible?: boolean,
+  onClose?: () => void,
+}

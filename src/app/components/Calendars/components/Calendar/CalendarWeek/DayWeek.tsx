@@ -16,11 +16,11 @@ type Props = {
     category: ReservationCategory,
   } & Reservation)[],
   calendarHeight: number,
-  rooms: { id: Room["id"], name: Room["name"], openFrom: Room["openFrom"], openTo: Room["openTo"] }[]
-  reservationCategories: { id: ReservationCategory["id"], name: ReservationCategory["name"] }[]
+  reservationFormData: ReservationFormType | null,
+  setReservationFormData: (data: ReservationFormType | null) => void,
 }
 
-export default function DayWeek({ calendarDay, room, reservations, calendarHeight, rooms, reservationCategories }: Props) {
+export default function DayWeek({ calendarDay, room, reservations, calendarHeight, reservationFormData, setReservationFormData }: Props) {
   const dayReservations = useMemo(() => {
     return getReservationsByDate(reservations, calendarDay.date) as ({
       category: ReservationCategory,
@@ -38,8 +38,8 @@ export default function DayWeek({ calendarDay, room, reservations, calendarHeigh
             room={room}
             dayReservation={dayReservation}
             calendarHeight={calendarHeight}
-            rooms={rooms}
-            reservationCategories={reservationCategories}
+            reservationFormData={reservationFormData}
+            setReservationFormData={setReservationFormData}
           />
         ))}
       {room.id &&
@@ -47,8 +47,9 @@ export default function DayWeek({ calendarDay, room, reservations, calendarHeigh
           date={calendarDay.date}
           room={room}
           calendarHeight={calendarHeight}
-          rooms={rooms}
-          reservationCategories={reservationCategories}
+          dayReservations={dayReservations}
+          reservationFormData={reservationFormData}
+          setReservationFormData={setReservationFormData}
         />}
     </div>
   )
