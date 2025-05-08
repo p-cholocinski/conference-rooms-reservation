@@ -5,13 +5,13 @@ const prisma = new PrismaClient()
 
 const testUser: Prisma.UserCreateInput[] = [
   {
-    email: 'test@test.pl',
-    name: 'Test User',
+    email: 'admin@admin.pl',
+    name: 'Admin',
     password: '',
     reservations: {
       create: [
         {
-          description: 'Test reservation',
+          description: 'Rezerwacja testowa',
           startDate: new Date(new Date().setHours(8, 0, 0, 0)),
           endDate: new Date(new Date().setHours(10, 0, 0, 0)),
           room: {
