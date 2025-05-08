@@ -42,7 +42,7 @@ export default function DaysWeek({ calendarDays, room, reservations, calendarHei
           reservationFormData={{
             ...reservationFormData,
             onClose: () => {
-              reservationFormData.onClose && reservationFormData.onClose()
+              if (reservationFormData.onClose) reservationFormData.onClose()
               setReservationFormData(null)
             },
           }}

@@ -21,7 +21,7 @@ export default function PeriodChange({ calendarPeriod, calendarType, className }
   }
 
   const handleCurrentPeriod = () => {
-    updateSearchParams("cp", getCurrentPeriod(new Date(), calendarType).valueOf().toString())
+    updateSearchParams("cp", getCurrentPeriod(new Date()).valueOf().toString())
   }
 
   const handleNextPeriod = () => {

@@ -1,16 +1,18 @@
 import { showToastOutsideOnly } from "@/lib/showToastOutsideOnly"
 
 export function withClientCallback<T>(
-  action: (prevState: any, formData: FormData, id?: any) => Promise<T>,
+  action: (prevState: unknown, formData: FormData, id?: number) => Promise<T>,
   onSuccess?: () => void,
-  id?: any,
-): (prevState: any, formData: FormData) => Promise<T> {
-  return async (prevState: any, formData: FormData) => {
+  id?: number,
+): (prevState: unknown, formData: FormData) => Promise<T> {
+  return async (prevState: unknown, formData: FormData) => {
     const result = await action(prevState, formData, id)
 
-    if ((result as any)?.errors?._form) {
-      showToastOutsideOnly("error", (result as any)?.errors?._form)
-    } else if (!(result as any)?.errors && onSuccess) {
+    const maybeWithError = result as T & { errors?: { _form?: string } }
+
+    if (maybeWithError?.errors?._form) {
+      showToastOutsideOnly("error", maybeWithError.errors._form)
+    } else if (!maybeWithError?.errors && onSuccess) {
       onSuccess()
     }
 

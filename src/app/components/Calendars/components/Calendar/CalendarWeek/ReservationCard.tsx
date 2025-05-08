@@ -19,11 +19,10 @@ type Props = {
     width: number,
   },
   onClose: () => void,
-  reservationFormData: ReservationFormType | null,
   setReservationFormData: (data: ReservationFormType | null) => void,
 }
 
-export default function ReservationCard({ reservation, parentLayout, onClose, reservationFormData, setReservationFormData }: Props) {
+export default function ReservationCard({ reservation, parentLayout, onClose, setReservationFormData }: Props) {
 
   const [isDeleting, setIsDeleting] = useState<boolean>(false)
 

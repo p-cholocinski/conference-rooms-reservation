@@ -18,7 +18,7 @@ type CreateReservationType = {
   }>
 } | undefined
 
-export async function upsertReservation(prevState: any, formData: FormData, id?: Reservation["id"]): Promise<CreateReservationType> {
+export async function upsertReservation(_prevState: unknown, formData: FormData, id?: Reservation["id"]): Promise<CreateReservationType> {
   const roomId = parseNumber(formData.get("roomId"))
   const categoryId = parseNumber(formData.get("categoryId"))
   const userId = parseNumber(formData.get("userId"))

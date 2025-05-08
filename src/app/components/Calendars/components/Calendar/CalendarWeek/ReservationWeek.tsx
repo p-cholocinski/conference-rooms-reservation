@@ -78,7 +78,6 @@ export default function ReservationWeek({ room, dayReservation, calendarHeight, 
               : { top: 0, left: 0, height: 0, width: 0 }
           }
           onClose={() => setReservationCardVisible(false)}
-          reservationFormData={reservationFormData}
           setReservationFormData={setReservationFormData}
         />}
     </div>
