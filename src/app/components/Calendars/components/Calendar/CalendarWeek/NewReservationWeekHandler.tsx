@@ -17,7 +17,8 @@ export default function NewReservationWeekHandler({ date, room, calendarHeight, 
 
   const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
     if (e.button === 0) {
-      const mouseY: number = e.nativeEvent.offsetY
+      const targetRect = e.currentTarget.getBoundingClientRect()
+      const mouseY: number = e.clientY - targetRect.top
       const dayPartHeight: number = getDayPartHeight(room, calendarHeight, 15)
       const initialTime: string = getNewReservationTimeFrom(date, mouseY, dayPartHeight, room.openFrom as number)
 
