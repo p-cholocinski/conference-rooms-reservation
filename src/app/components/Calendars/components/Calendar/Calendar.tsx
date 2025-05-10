@@ -51,7 +51,7 @@ export default async function Calendar({ roomId, calendar, calendarPeriod }: Pro
       name: true,
     }
   })
-
+  new Date(calendarPeriod)
   return (
     <>
       {calendarDays && reservations ?

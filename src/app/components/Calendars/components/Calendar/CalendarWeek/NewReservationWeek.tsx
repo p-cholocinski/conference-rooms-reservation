@@ -52,8 +52,7 @@ export default function NewReservationWeek({ date, room, calendarHeight, initial
 
   const handleMouseMoveOutside = (e: MouseEvent<HTMLDivElement>) => {
     if (initialTime && initialTop && !overlaps) {
-      const targetRect = e.currentTarget.getBoundingClientRect()
-      const mouseY: number = e.clientY - targetRect.top
+      const mouseY: number = e.nativeEvent.offsetY
       const changeTop: boolean = mouseY < initialTop
 
       const time: Date = changeTop

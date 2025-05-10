@@ -99,9 +99,12 @@ export function getNewReservationTimeTo(date: Date, mouseY: number, calendarHeig
 export function getNewReservationTime(date: Date, top: number, dayPartHeight: number, roomOpenFrom: Room["openFrom"]): Date {
   const dayPart: number = top > 0 ? top / dayPartHeight : 0
   const hoursFromOpen: number = dayPart * (15 / 60)
-  const hoursFromDayStart: number = roomOpenFrom as number + hoursFromOpen
+  const hoursFromDayStart: number = (roomOpenFrom as number) + hoursFromOpen
   const millisecondsFromDayStart: number = hoursFromDayStart * 60 * 60 * 1000
-  const newReservationTime: Date = new Date(date.getTime() + millisecondsFromDayStart)
+
+  const newReservationTime: Date = new Date(date)
+  newReservationTime.setHours(0, 0, 0, 0)
+  newReservationTime.setMilliseconds(newReservationTime.getMilliseconds() + millisecondsFromDayStart)
 
   return newReservationTime
 }
