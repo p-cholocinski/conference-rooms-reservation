@@ -23,7 +23,7 @@ export default async function RoomsBar() {
       <div className="bg-neutral-600 h-full py-3 px-1 shadow-none shadow-neutral-200 rounded-r-2xl md:shadow-[0px_0px_4px_1px]">
         <div className="flex flex-col h-full p-1 gap-4 overflow-y-scroll">
           {locations?.map(location => (
-            <Location key={location.id} name={location.name} rooms={location.rooms} />
+            <Location key={"location-id-" + location.id} name={location.name} rooms={location.rooms} />
           ))}
         </div>
       </div>

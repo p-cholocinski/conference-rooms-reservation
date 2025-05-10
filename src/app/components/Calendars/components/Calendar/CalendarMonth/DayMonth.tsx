@@ -20,7 +20,7 @@ export default function DayMonth({ calendarDay, dayReservations }: Props) {
         <div className="h-full overflow-y-scroll scrollbar-hidden">
           <div className="flex flex-col gap-1">
             {dayReservations.map((dayReservation) => (
-              <ReservationMonth key={dayReservation.id} dayReservation={dayReservation} />
+              <ReservationMonth key={"reservation-id-" + dayReservation.id} dayReservation={dayReservation} />
             ))}
           </div>
         </div>

@@ -29,7 +29,7 @@ export default function Location({ name, rooms }: Props) {
       </div>
       <div className={`${!roomsCollapsed ? 'hidden ' : ''}ml-1.5 border-x border-b border-neutral-400 rounded-b-md flex flex-col`}>
         {rooms.map(room => (
-          <Room key={room.id} room={room} />
+          <Room key={"room-id-" + room.id} room={room} />
         ))}
       </div>
     </div>

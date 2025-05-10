@@ -1,5 +1,5 @@
 import DayMonth from "./DayMonth";
-import WeekRow from "../../../../../../components/WeekRow";
+import WeekRow from "@/components/WeekRow";
 import { Reservation } from "@prisma/client";
 import { getReservationsByDate } from "@/lib/reservation";
 
@@ -17,7 +17,7 @@ export default function CalendarMonth({ calendarDays, reservations }: Props) {
         {calendarDays
           ? calendarDays.map(calendarDay => (
             <DayMonth
-              key={calendarDay.date}
+              key={"day-month-" + calendarDay.date.toISOString()}
               calendarDay={calendarDay}
               dayReservations={getReservationsByDate(reservations, calendarDay.date)}
             />

@@ -31,7 +31,7 @@ export default function DropDown({ options, isOpen, scrollToValue, minWidht, onC
     >
       {options.map(option => (
         <option
-          key={option.value}
+          key={"drop-down-" + option.value}
           ref={option.value === scrollToValue ? selectedRef : null}
           className={`p-2 cursor-pointer rounded-sm hover:bg-neutral-800/40 ${scrollToValue === option.value && "bg-neutral-800/50"}`}
           value={option.value}

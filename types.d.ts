@@ -1,5 +1,5 @@
 type CalendarDay = {
-  date: string,
+  date: Date,
   dayNumber: number,
   currentMonth: boolean,
   currentDay: boolean,

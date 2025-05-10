@@ -40,7 +40,7 @@ export default async function Calendar({ roomId, calendar, calendarPeriod }: Pro
       where: {
         roomId: roomId,
         startDate: { gte: calendarDays[0].date },
-        endDate: { lt: getNextDayStart(new Date(calendarDays[calendarDays.length - 1].date)) }
+        endDate: { lt: getNextDayStart(calendarDays[calendarDays.length - 1].date) }
       }
     })
     : []

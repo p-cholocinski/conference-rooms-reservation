@@ -19,7 +19,7 @@ export default function Hours({ openFrom, openTo }: Props) {
     >
       {hours?.map((hour) => (
         <div
-          key={hour}
+          key={"hour-" + hour}
           className="h-full min-h-12 first:invisible"
         >
           <div

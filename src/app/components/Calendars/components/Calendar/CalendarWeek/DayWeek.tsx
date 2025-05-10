@@ -34,7 +34,7 @@ export default function DayWeek({ calendarDay, room, reservations, calendarHeigh
       {room.id &&
         dayReservations?.map((dayReservation) => (
           <ReservationWeek
-            key={dayReservation.id}
+            key={"reservation-id-" + dayReservation.id}
             room={room}
             dayReservation={dayReservation}
             calendarHeight={calendarHeight}

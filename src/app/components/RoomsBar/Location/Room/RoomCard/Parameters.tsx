@@ -15,7 +15,7 @@ export default function Parameters({ parameters }: Props) {
       <table className="w-full justify-center">
         <tbody>
           {parameters.map(parameter => (
-            <tr key={parameter.parameterId} className="border-b border-neutral-400 text-sm flex last:border-b-2 hover:bg-neutral-600">
+            <tr key={"parameter-id-" + parameter.parameterId} className="border-b border-neutral-400 text-sm flex last:border-b-2 hover:bg-neutral-600">
               <td className="w-5/6">{parameter.parameter.name}</td>
               <td className="w-1/6 text-center place-items-center place-content-center">
                 {parameter.value.toLowerCase() === "true"

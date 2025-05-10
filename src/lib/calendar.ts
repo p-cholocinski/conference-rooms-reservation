@@ -25,7 +25,7 @@ export function getCalendarDays(date: Date, calendarType: Calendar["type"]): Cal
   for (let d: number = 1; d <= calendar.dayCount; d++) {
 
     monthDays.push({
-      date: new Date(nextDay).toISOString(),
+      date: new Date(nextDay),
       dayNumber: nextDay.getDate(),
       currentMonth: isCurrentMonth(nextDay, data.year, data.month),
       currentDay: isCurrentDay(nextDay, data.today),
@@ -103,9 +103,7 @@ export function getNextPeriod(date: Date, calendarType: Calendar["type"] = "mont
 
 // Time
 
-export function getDateTimeList(dateTimeStart: string, dateTimeEnd: string) {
-  const timeStart: Date = new Date(dateTimeStart)
-  const timeEnd: Date = new Date(dateTimeEnd)
+export function getDateTimeList(timeStart: Date, timeEnd: Date) {
   const timeList: { value: string, label: string }[] = []
 
   while (timeStart <= timeEnd) {

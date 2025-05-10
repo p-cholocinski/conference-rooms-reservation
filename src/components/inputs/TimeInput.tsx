@@ -21,11 +21,11 @@ export default function TimeInput({ name, placeholder, time, timeMin, timeMax, e
 
   const dateTimeList = getDateTimeList(
     timeMin
-      ? getRoundedToQuarterTime(new Date(timeMin)).toISOString()
-      : getDayStart(new Date()).toISOString(),
+      ? getRoundedToQuarterTime(timeMin)
+      : getDayStart(new Date()),
     timeMax
-      ? getRoundedToQuarterTime(new Date(timeMax)).toISOString()
-      : getNextDayStart(new Date()).toISOString(),
+      ? getRoundedToQuarterTime(timeMax)
+      : getNextDayStart(new Date()),
   )
 
   const handleSelectedTime = (time: string | number) => {

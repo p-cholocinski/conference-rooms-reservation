@@ -5,22 +5,22 @@ import useClickOutside from "@/hooks/useClickOutside";
 import { getCalendarDays, getNextPeriod, getPrevPeriod } from "@/lib/calendar";
 
 type Props = {
-  selectedDate: string,
-  handleSelectedDate: (date: string | null) => void,
+  selectedDate: Date,
+  handleSelectedDate: (date: Date | null) => void,
   parentRef: RefObject<HTMLDivElement | null>,
 }
 
 export default function DatePicker({ selectedDate, handleSelectedDate, parentRef }: Props) {
-  const [selectedPeriod, setSelectedPeriod] = useState<Date>(new Date(selectedDate))
+  const [selectedPeriod, setSelectedPeriod] = useState<Date>(selectedDate)
 
   useClickOutside(parentRef, () => handleSelectedDate(null))
 
   const calendarDays: CalendarDay[] = useMemo(() => {
-    return getCalendarDays(new Date(selectedPeriod), 'month')
+    return getCalendarDays(selectedPeriod, 'month')
   }, [selectedPeriod])
 
   const handlePrevPeriod = () => {
-    setSelectedPeriod(getPrevPeriod(new Date(selectedPeriod)))
+    setSelectedPeriod(getPrevPeriod(selectedPeriod))
   }
 
   const handleCurrentPeriod = () => {
@@ -28,7 +28,7 @@ export default function DatePicker({ selectedDate, handleSelectedDate, parentRef
   }
 
   const handleNextPeriod = () => {
-    setSelectedPeriod(getNextPeriod(new Date(selectedPeriod)))
+    setSelectedPeriod(getNextPeriod(selectedPeriod))
   }
 
   return (
@@ -46,7 +46,7 @@ export default function DatePicker({ selectedDate, handleSelectedDate, parentRef
       <div className="grid pt-1 grid-cols-7 grid-rows-6 text-center text-sm">
         {calendarDays.map(calendarDay => (
           <div
-            key={'datePicker-' + calendarDay.date}
+            key={'date-picker-' + calendarDay.date.toISOString()}
             className={`w-9 h-9 cursor-pointer content-center rounded-md hover:bg-neutral-800/40 ${!calendarDay.currentMonth ? 'text-neutral-400' : 'text-neutral-50 font-bold'} ${calendarDay.currentDay && 'bg-neutral-800/60'} ${calendarDay.date === selectedDate && '!bg-neutral-200 !text-neutral-950'}`}
             onClick={() => handleSelectedDate(calendarDay.date)}
           >

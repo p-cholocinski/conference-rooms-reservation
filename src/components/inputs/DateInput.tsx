@@ -16,11 +16,11 @@ export default function DateInput({ name, placeholder, date, errorMsg, onChange 
 
   const dateInputRef = useRef<HTMLDivElement | null>(null)
 
-  const selectedDate = new Date(date).toISOString()
+  const selectedDate = new Date(date)
 
-  const handleSelectedDate = (date: string | null) => {
+  const handleSelectedDate = (date: Date | null) => {
     if (date) {
-      if (onChange) onChange(new Date(date))
+      if (onChange) onChange(date)
     }
     setShowDatePicker(false)
   }
@@ -32,10 +32,10 @@ export default function DateInput({ name, placeholder, date, errorMsg, onChange 
   return (
     <div ref={dateInputRef}>
       <TextInput
-        key={name}
+        key={"date-input-" + name}
         name={name}
         placeholder={placeholder}
-        value={selectedDate}
+        value={selectedDate.toISOString()}
         displayValue={formatDate(selectedDate)}
         readOnly={true}
         errorMsg={errorMsg}

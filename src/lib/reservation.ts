@@ -3,10 +3,9 @@ import { getNextDayStart } from "./calendar"
 
 // Get Reservations
 
-export function getReservationsByDate(reservations: Reservation[], date: string | Date) {
-  const dateIn = new Date(date).toDateString()
+export function getReservationsByDate(reservations: Reservation[], date: Date) {
   const outReservations = reservations.filter((reservation) => (
-    new Date(reservation.startDate).toDateString() === dateIn
+    reservation.startDate.toDateString() === date.toDateString()
   ))
   outReservations.sort((a, b) => (a.startDate > b.startDate) ? 1 : ((b.startDate > a.startDate) ? -1 : 0))
 
@@ -83,29 +82,28 @@ export function getNewReservationWeekBottom(mouseY: number, calendarHeight: numb
   return newReservationWeekBottom
 }
 
-export function getNewReservationTimeFrom(isoDate: string, mouseY: number, dayPartHeight: number, roomOpenFrom: Room["openFrom"]): string {
+export function getNewReservationTimeFrom(date: Date, mouseY: number, dayPartHeight: number, roomOpenFrom: Room["openFrom"]): Date {
   const top: number = getNewReservationWeekTop(mouseY, dayPartHeight)
-  const timeFrom: string = getNewReservationTime(isoDate, top, dayPartHeight, roomOpenFrom as number)
+  const timeFrom: Date = getNewReservationTime(date, top, dayPartHeight, roomOpenFrom as number)
 
   return timeFrom
 }
 
-export function getNewReservationTimeTo(isoDate: string, mouseY: number, calendarHeight: number, dayPartHeight: number, roomOpenFrom: Room["openFrom"]): string {
+export function getNewReservationTimeTo(date: Date, mouseY: number, calendarHeight: number, dayPartHeight: number, roomOpenFrom: Room["openFrom"]): Date {
   const bottom: number = getNewReservationWeekBottom(mouseY, calendarHeight, dayPartHeight)
-  const timeTo: string = getNewReservationTime(isoDate, calendarHeight - bottom, dayPartHeight, roomOpenFrom as number)
+  const timeTo: Date = getNewReservationTime(date, calendarHeight - bottom, dayPartHeight, roomOpenFrom as number)
 
   return timeTo
 }
 
-export function getNewReservationTime(isoDate: string, top: number, dayPartHeight: number, roomOpenFrom: Room["openFrom"]): string {
-  const date: Date = new Date(isoDate)
+export function getNewReservationTime(date: Date, top: number, dayPartHeight: number, roomOpenFrom: Room["openFrom"]): Date {
   const dayPart: number = top > 0 ? top / dayPartHeight : 0
   const hoursFromOpen: number = dayPart * (15 / 60)
   const hoursFromDayStart: number = roomOpenFrom as number + hoursFromOpen
   const millisecondsFromDayStart: number = hoursFromDayStart * 60 * 60 * 1000
   const newReservationTime: Date = new Date(date.getTime() + millisecondsFromDayStart)
 
-  return newReservationTime.toISOString()
+  return newReservationTime
 }
 
 // Reservation Form
