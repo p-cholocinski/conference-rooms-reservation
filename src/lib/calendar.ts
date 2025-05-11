@@ -98,7 +98,7 @@ export function getNextPeriod(date: Date, calendarType: Calendar["type"] = "mont
     calendarType === "month"
       ? new Date(date).setMonth(date.getMonth() + 1, 1)
       : new Date(date).setDate(date.getDate() + 7)
-  return nextDate
+  return new Date(nextDate)
 }
 
 // Time
