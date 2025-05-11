@@ -40,8 +40,8 @@ export function getCalendarDays(date: Date, calendarType: Calendar["type"]): Cal
 function getData(date: Date, calendarType: Calendar["type"]) {
   const startDate: Date =
     calendarType === "month"
-      ? new Date(new Date(date).setDate(1))
-      : new Date(date)
+      ? new Date(new Date(new Date(date).setDate(1)).setHours(0, 0, 0, 0))
+      : new Date(new Date(date).setHours(0, 0, 0, 0))
   const year: number = startDate.getFullYear()
   const month: number = startDate.getMonth()
   const today: Date = new Date()
