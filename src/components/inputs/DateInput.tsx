@@ -6,7 +6,7 @@ import { formatDate } from "@/lib/dateTimeFormats";
 type Props = {
   name: string,
   placeholder: string,
-  date: Date | string,
+  date: Date,
   errorMsg?: string,
   onChange?: (date: Date) => void,
 }
