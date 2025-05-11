@@ -32,6 +32,7 @@ export function getCalendarDays(date: Date, calendarType: Calendar["type"]): Cal
     })
 
     nextDay.setDate(nextDay.getDate() + 1)
+    nextDay.setHours(0, 0, 0, 0)
   }
 
   return monthDays
