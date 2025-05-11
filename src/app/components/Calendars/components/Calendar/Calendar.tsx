@@ -7,11 +7,11 @@ import prisma from "@/lib/prisma";
 type Props = {
   roomId?: Room["id"],
   calendar: Calendar,
-  calendarPeriod: string,
+  calendarPeriod: Date,
 }
 
 export default async function Calendar({ roomId, calendar, calendarPeriod }: Props) {
-  const calendarDays = getCalendarDays(new Date(calendarPeriod), calendar.type)
+  const calendarDays = getCalendarDays(calendarPeriod, calendar.type)
 
   const rooms = await prisma.room.findMany({
     select: {
@@ -51,7 +51,7 @@ export default async function Calendar({ roomId, calendar, calendarPeriod }: Pro
       name: true,
     }
   })
-  new Date(calendarPeriod)
+
   return (
     <>
       {calendarDays && reservations ?

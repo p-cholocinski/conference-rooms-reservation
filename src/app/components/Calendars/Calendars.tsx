@@ -7,7 +7,7 @@ import { getCalendarByType } from "@/lib/calendar"
 type Props = {
   roomId?: Room["id"],
   calendarType: Calendar["type"],
-  calendarPeriod: string,
+  calendarPeriod: Date,
 }
 
 export default async function Calendars({ roomId, calendarType, calendarPeriod }: Props) {

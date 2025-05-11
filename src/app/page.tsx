@@ -24,8 +24,8 @@ export default async function Home(props: {
     : "month"
 
   const calendarPeriod = searchParams?.cp
-    ? new Date(parseInt(searchParams.cp)).toISOString()
-    : getCurrentPeriod(new Date()).toISOString()
+    ? new Date(parseInt(searchParams.cp))
+    : getCurrentPeriod(new Date())
 
   return (
     <>

@@ -83,21 +83,21 @@ export function getCalendarByType(calendarType: Calendar["type"]) {
 export function getPrevPeriod(date: Date, calendarType: Calendar["type"] = "month") {
   const prevDate =
     calendarType === "month"
-      ? new Date(date.getFullYear(), date.getMonth() - 1, 1)
-      : new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7)
-  return prevDate
+      ? new Date(date).setMonth(date.getMonth() - 1, 1)
+      : new Date(date).setDate(date.getDate() - 7)
+  return new Date(prevDate)
 }
 
 export function getCurrentPeriod(date: Date): Date {
-  const currentDate = new Date(date.getFullYear(), date.getMonth(), date.getDate())
-  return currentDate
+  const currentDate = new Date(date).setHours(0, 0, 0, 0)
+  return new Date(currentDate)
 }
 
 export function getNextPeriod(date: Date, calendarType: Calendar["type"] = "month") {
   const nextDate =
     calendarType === "month"
-      ? new Date(date.getFullYear(), date.getMonth() + 1, 1)
-      : new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7)
+      ? new Date(date).setMonth(date.getMonth() + 1, 1)
+      : new Date(date).setDate(date.getDate() + 7)
   return nextDate
 }
 

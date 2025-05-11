@@ -15,8 +15,8 @@ export function getReservationsByDate(reservations: Reservation[], date: Date) {
 // Reservation WeekCalendar Position
 
 export function getReservationWeekTop(dateStart: Date, room: { openFrom: Room["openFrom"], openTo: Room["openTo"] }, parentElementHeight: number): number {
-  const startDay = new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate(), room.openFrom as number)
-  const endDay = new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate(), room.openTo as number + 1)
+  const startDay = new Date(new Date(dateStart).setHours((room.openFrom as number), 0, 0, 0))
+  const endDay = new Date(new Date(dateStart).setHours((room.openTo as number) + 1, 0, 0, 0))
 
   const totalMillisecondsInDay = endDay.getTime() - startDay.getTime()
   const elapsedMillisecondsInDay = dateStart.getTime() - startDay.getTime()
@@ -27,8 +27,8 @@ export function getReservationWeekTop(dateStart: Date, room: { openFrom: Room["o
 }
 
 export function getReservationWeekBottom(dateEnd: Date, room: { openFrom: Room["openFrom"], openTo: Room["openTo"] }, parentElementHeight: number): number {
-  const startDay = new Date(dateEnd.getFullYear(), dateEnd.getMonth(), dateEnd.getDate(), room.openFrom as number)
-  const endDay = new Date(dateEnd.getFullYear(), dateEnd.getMonth(), dateEnd.getDate(), room.openTo as number + 1)
+  const startDay = new Date(new Date(dateEnd).setHours((room.openFrom as number), 0, 0, 0))
+  const endDay = new Date(new Date(dateEnd).setHours((room.openTo as number) + 1, 0, 0, 0))
 
   const totalMillisecondsInDay = endDay.getTime() - startDay.getTime()
   const leftMillisecondsInDay = endDay.getTime() - dateEnd.getTime()

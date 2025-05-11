@@ -6,7 +6,7 @@ import { getCurrentPeriod, getNextPeriod, getPrevPeriod } from "@/lib/calendar"
 import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams"
 
 type Props = {
-  calendarPeriod: string,
+  calendarPeriod: Date,
   calendarType: Calendar["type"],
   className?: string,
 }
@@ -17,7 +17,7 @@ export default function PeriodChange({ calendarPeriod, calendarType, className }
   const formatedMonthYear = formatMonthYear(calendarPeriod)
 
   const handlePrevPeriod = () => {
-    updateSearchParams("cp", getPrevPeriod(new Date(calendarPeriod), calendarType).valueOf().toString())
+    updateSearchParams("cp", getPrevPeriod(calendarPeriod, calendarType).valueOf().toString())
   }
 
   const handleCurrentPeriod = () => {
@@ -25,7 +25,7 @@ export default function PeriodChange({ calendarPeriod, calendarType, className }
   }
 
   const handleNextPeriod = () => {
-    updateSearchParams("cp", getNextPeriod(new Date(calendarPeriod), calendarType).valueOf().toString())
+    updateSearchParams("cp", getNextPeriod(calendarPeriod, calendarType).valueOf().toString())
   }
 
   return (
