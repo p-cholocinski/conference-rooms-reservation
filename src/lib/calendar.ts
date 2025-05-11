@@ -56,7 +56,7 @@ function getWeekMonday(date: Date) {
   const dateIn = new Date(date)
   const weekDay = dateIn.getDay()
   const weekMondayNum = dateIn.getDate() - weekDay + (weekDay === 0 ? -6 : 1)
-  const weekMondayDate = new Date(dateIn.setDate(weekMondayNum))
+  const weekMondayDate = new Date(new Date(new Date(dateIn).setDate(weekMondayNum)).setHours(0, 0, 0, 0))
 
   return weekMondayDate
 }
