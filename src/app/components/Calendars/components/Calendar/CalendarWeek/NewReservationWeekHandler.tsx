@@ -27,7 +27,7 @@ export default function NewReservationWeekHandler({ date, room, calendarHeight, 
         ...reservationFormData,
         date: date,
         startDate: initialTime,
-        endDate: new Date(initialTime.getTime() + (15 * 60 * 1000)),
+        endDate: new Date(new Date(initialTime).setMinutes(initialTime.getMinutes() + 15)),
       })
     }
   }
@@ -39,7 +39,7 @@ export default function NewReservationWeekHandler({ date, room, calendarHeight, 
         onMouseDown={(e) => handleMouseDown(e)}
       >
       </div>
-      {(!reservationFormData?.reservationId && reservationFormData?.date === date) &&
+      {(!reservationFormData?.reservationId && reservationFormData?.date?.getTime() === date.getTime()) &&
         <NewReservationWeek
           date={date}
           calendarHeight={calendarHeight}

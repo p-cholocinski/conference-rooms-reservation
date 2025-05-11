@@ -2,7 +2,7 @@ import { useState, useMemo, RefObject } from "react";
 import WeekRow from "@/components/WeekRow";
 import PeriodChange from "@/components/PeriodChange";
 import useClickOutside from "@/hooks/useClickOutside";
-import { getCalendarDays, getNextPeriod, getPrevPeriod } from "@/lib/calendar";
+import { getCalendarDays, getCurrentPeriod, getNextPeriod, getPrevPeriod } from "@/lib/calendar";
 
 type Props = {
   selectedDate: Date,
@@ -24,7 +24,7 @@ export default function DatePicker({ selectedDate, handleSelectedDate, parentRef
   }
 
   const handleCurrentPeriod = () => {
-    setSelectedPeriod(new Date())
+    setSelectedPeriod(getCurrentPeriod())
   }
 
   const handleNextPeriod = () => {
@@ -47,7 +47,7 @@ export default function DatePicker({ selectedDate, handleSelectedDate, parentRef
         {calendarDays.map(calendarDay => (
           <div
             key={'date-picker-' + calendarDay.date.toISOString()}
-            className={`w-9 h-9 cursor-pointer content-center rounded-md hover:bg-neutral-800/40 ${!calendarDay.currentMonth ? 'text-neutral-400' : 'text-neutral-50 font-bold'} ${calendarDay.currentDay && 'bg-neutral-800/60'} ${calendarDay.date === selectedDate && '!bg-neutral-200 !text-neutral-950'}`}
+            className={`w-9 h-9 cursor-pointer content-center rounded-md hover:bg-neutral-800/40 ${!calendarDay.currentMonth ? 'text-neutral-400' : 'text-neutral-50 font-bold'} ${calendarDay.currentDay && 'bg-neutral-800/60'} ${calendarDay.date.getTime() === selectedDate.getTime() && '!bg-neutral-200 !text-neutral-950'}`}
             onClick={() => handleSelectedDate(calendarDay.date)}
           >
             {calendarDay.dayNumber}

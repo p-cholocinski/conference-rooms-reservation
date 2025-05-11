@@ -68,7 +68,7 @@ export default function NewReservationWeek({ date, room, calendarHeight, initial
           setReservationFormData({
             ...reservationFormData,
             startDate: time,
-            endDate: new Date(initialTime.getTime() + (15 * 60 * 1000)),
+            endDate: new Date(new Date(initialTime).setMinutes(initialTime.getMinutes() + 15)),
           })
         } else {
           setReservationFormData({

@@ -37,7 +37,7 @@ export default function ReservationForm({ reservationFormData, rooms, reservatio
   const descriptionRef = useRef<string>(reservationFormData.description || "") // useRef is used to avoid re-rendering the component on every change
   const date = reservationFormData.date ? getDayStart(new Date(reservationFormData.date)) : getDayStart(new Date())
   const startDate = reservationFormData.startDate ? getRoundedToQuarterTime(new Date(reservationFormData.startDate)) : getRoundedToQuarterTime(new Date())
-  const endDate = reservationFormData.endDate ? getRoundedToQuarterTime(new Date(reservationFormData.endDate)) : new Date(startDate.getTime() + 30 * 60 * 1000)
+  const endDate = reservationFormData.endDate ? getRoundedToQuarterTime(new Date(reservationFormData.endDate)) : new Date(new Date(startDate).setMinutes(startDate.getMinutes() + 15))
   const room = reservationFormData.roomId ? rooms.find(room => room.id === reservationFormData.roomId) : undefined
   const categoryId = reservationFormData.categoryId
 
@@ -46,7 +46,7 @@ export default function ReservationForm({ reservationFormData, rooms, reservatio
 
   const timeMin = new Date(new Date(date).setHours(room?.openFrom || 0, 0, 0, 0))
 
-  const timeMinEndDate = new Date(startDate.getTime() + 15 * 60 * 1000)
+  const timeMinEndDate = new Date(new Date(startDate).setMinutes(startDate.getMinutes() + 15))
 
   const timeMax = room ? new Date(new Date(date).setHours(room?.openTo, 0, 0, 0)) : getNextDayStart(timeMin)
 
@@ -57,9 +57,8 @@ export default function ReservationForm({ reservationFormData, rooms, reservatio
   const categoryName = categoryId ? reservationCategories.find((reservationCategory) => reservationCategory.id === categoryId)?.name : undefined
 
   const handleChangeDate = (date: Date) => {
-    const startDateDayStart: number = getDayStart(startDate).getTime()
-    const newStartDate = new Date(date.getTime() + (startDate.getTime() - startDateDayStart))
-    const newEndDate = new Date(date.getTime() + (endDate.getTime() - startDateDayStart))
+    const newStartDate = new Date(new Date(startDate).setFullYear(date.getFullYear(), date.getMonth(), date.getDate()))
+    const newEndDate = new Date(new Date(endDate).setFullYear(date.getFullYear(), date.getMonth(), date.getDate()))
 
     setReservationFormData({
       ...reservationFormData,
