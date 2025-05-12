@@ -57,7 +57,8 @@ export default async function Calendar({ roomId, calendar, calendarPeriod }: Pro
       {calendarDays && reservations ?
         calendar.type === 'week'
           ? <CalendarWeek
-            calendarDays={calendarDays}
+            // calendarDays={calendarDays}
+            calendarPeriod={calendarPeriod}
             room={room}
             reservations={reservations}
             rooms={rooms}
