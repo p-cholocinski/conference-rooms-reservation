@@ -1,7 +1,6 @@
 import { auth } from "@/auth"
 import Link from "next/link"
 import { FaUser } from "react-icons/fa"
-import TestServerButton from "./TestServerButton"
 
 export default async function Navbar() {
   const session = await auth()
@@ -13,7 +12,6 @@ export default async function Navbar() {
           <Link href="/" className="no-underline flex flex-row gap-3 items-center hover:text-neutral-50">
             Conference Rooms Reservation
           </Link>
-          <TestServerButton />
         </h1>
         <div className="flex flex-row items-center text-neutral-200">
           {session?.user && (

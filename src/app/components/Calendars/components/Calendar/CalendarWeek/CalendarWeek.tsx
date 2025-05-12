@@ -10,8 +10,7 @@ import { Reservation, ReservationCategory, Room } from "@prisma/client";
 import { getCalendarDays } from "@/lib/calendar";
 
 type Props = {
-  // calendarDays: CalendarDay[],
-  calendarPeriod: Date,
+  calendarDays: CalendarDay[],
   room: {
     id: Room["id"] | null,
     name: Room["name"] | null,
@@ -25,9 +24,7 @@ type Props = {
   reservationCategories: { id: ReservationCategory["id"], name: ReservationCategory["name"] }[]
 }
 
-export default function CalendarWeek({ /* calendarDays,  */calendarPeriod, room, reservations, rooms, reservationCategories }: Props) {
-  const calendarDays = getCalendarDays(calendarPeriod, "week")
-
+export default function CalendarWeek({ calendarDays, room, reservations, rooms, reservationCategories }: Props) {
   const calendarWeekElement = useRef<HTMLDivElement>(null)
 
   const calendarHeight = useResizeObserver(calendarWeekElement)
