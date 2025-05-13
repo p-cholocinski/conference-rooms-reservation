@@ -1,5 +1,5 @@
 import { Reservation, Room } from "@prisma/client"
-import { getNextDayStart } from "./calendar"
+import { getUtcNextDayStart } from "./calendar"
 
 // Get Reservations
 
@@ -117,7 +117,7 @@ export function getTimesAfterRoomChange(startDate: Date, endDate: Date, roomOpen
   )
   const timeMax = roomOpenTo
     ? new Date(new Date(endDate).setHours(roomOpenTo, 0, 0, 0))
-    : getNextDayStart(timeMin)
+    : getUtcNextDayStart(timeMin)
   const timeDiff = endDate.getTime() - startDate.getTime()
 
   if (startDate < timeMin) {

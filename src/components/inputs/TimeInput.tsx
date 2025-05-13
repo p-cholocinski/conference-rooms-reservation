@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import TextInput from "@/components/inputs/TextInput";
 import DropDown from "@/components/DropDown";
-import { getDateTimeList, getDayStart, getNextDayStart, getRoundedToQuarterTime } from "@/lib/calendar";
+import { getDateTimeList, getUtcNextDayStart, getRoundedToQuarterTime, getUtcStartDay } from "@/lib/calendar";
 import { formatTime } from "@/lib/dateTimeFormats";
 
 type Props = {
@@ -22,10 +22,10 @@ export default function TimeInput({ name, placeholder, time, timeMin, timeMax, e
   const dateTimeList = getDateTimeList(
     timeMin
       ? getRoundedToQuarterTime(timeMin)
-      : getDayStart(new Date()),
+      : getUtcStartDay(new Date()),
     timeMax
       ? getRoundedToQuarterTime(timeMax)
-      : getNextDayStart(new Date()),
+      : getUtcNextDayStart(new Date()),
   )
 
   const handleSelectedTime = (time: string | number) => {

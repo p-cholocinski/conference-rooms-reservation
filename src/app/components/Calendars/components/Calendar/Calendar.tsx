@@ -1,6 +1,6 @@
 import CalendarMonth from "./CalendarMonth/CalendarMonth";
 import CalendarWeek from "./CalendarWeek/CalendarWeek";
-import { getCalendarDays, getNextDayStart } from "@/lib/calendar";
+import { getCalendarDays, getUtcNextDayStart } from "@/lib/calendar";
 import { Room } from "@prisma/client";
 import prisma from "@/lib/prisma";
 
@@ -40,7 +40,7 @@ export default async function Calendar({ roomId, calendar, calendarPeriod }: Pro
       where: {
         roomId: roomId,
         startDate: { gte: calendarDays[0].date },
-        endDate: { lt: getNextDayStart(calendarDays[calendarDays.length - 1].date) }
+        endDate: { lt: getUtcNextDayStart(calendarDays[calendarDays.length - 1].date) }
       }
     })
     : []

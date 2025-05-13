@@ -16,61 +16,55 @@ export const calendars: Calendar[] = [
 // CalendarDays
 
 export function getCalendarDays(date: Date, calendarType: Calendar["type"]): CalendarDay[] {
-  const data = getData(date, calendarType)
+  const { startDate, year, month, today } = getData(date, calendarType)
   const calendar = getCalendarByType(calendarType)
 
-  const monthDays: CalendarDay[] = []
-  const nextDay: Date = getWeekMonday(data.startDate)
+  const calendarDays: CalendarDay[] = []
+  const nextDay: Date = getMondayDate(startDate)
 
   for (let d: number = 1; d <= calendar.dayCount; d++) {
 
-    monthDays.push({
+    calendarDays.push({
       date: new Date(nextDay),
-      dayNumber: nextDay.getDate(),
-      currentMonth: isCurrentMonth(nextDay, data.year, data.month),
-      currentDay: isCurrentDay(nextDay, data.today),
+      dayNumber: nextDay.getUTCDate(),
+      currentMonth: isCurrentMonth(nextDay, year, month),
+      currentDay: isCurrentDay(nextDay, today),
     })
 
-    nextDay.setDate(nextDay.getDate() + 1)
-    nextDay.setHours(0, 0, 0, 0)
+    nextDay.setUTCDate(nextDay.getUTCDate() + 1)
   }
 
-  return monthDays
+  return calendarDays
 }
 
 function getData(date: Date, calendarType: Calendar["type"]) {
-  const startDate: Date =
-    calendarType === "month"
-      ? new Date(new Date(new Date(date).setDate(1)).setHours(0, 0, 0, 0))
-      : new Date(new Date(date).setHours(0, 0, 0, 0))
-  const year: number = startDate.getFullYear()
-  const month: number = startDate.getMonth()
-  const today: Date = new Date()
+  const utcDate: Date = getUtcStartDay(date)
 
-  const data = { startDate, year, month, today }
+  const startDate: Date = calendarType === "month"
+    ? new Date(utcDate.setUTCDate(1))
+    : utcDate
+  const year: number = startDate.getUTCFullYear()
+  const month: number = startDate.getUTCMonth()
+  const today: Date = getUtcStartDay(new Date())
 
-  return data
+  return { startDate, year, month, today }
 }
 
-function getWeekMonday(date: Date) {
-  const dateIn = new Date(date)
-  const weekDay = dateIn.getDay()
-  const weekMondayNum = dateIn.getDate() - weekDay + (weekDay === 0 ? -6 : 1)
-  const weekMondayDate = new Date(new Date(new Date(dateIn).setDate(weekMondayNum)).setHours(0, 0, 0, 0))
+function getMondayDate(date: Date) {
+  const dateIn = getUtcStartDay(date)
+  const weekDay = dateIn.getUTCDay()
+  const mondayNum = dateIn.getUTCDate() - weekDay + (weekDay === 0 ? -6 : 1)
+  const mondayDate = new Date(dateIn.setUTCDate(mondayNum))
 
-  return weekMondayDate
+  return mondayDate
 }
 
 function isCurrentMonth(date: Date, year: number, month: number) {
-  return date.getFullYear() === year && date.getMonth() === month
-    ? true
-    : false
+  return date.getUTCFullYear() === year && date.getUTCMonth() === month
 }
 
 function isCurrentDay(date: Date, today: Date) {
-  return date.toDateString() === today.toDateString()
-    ? true
-    : false
+  return date.toISOString().slice(0, 10) === today.toISOString().slice(0, 10)
 }
 
 // CalendarTypes
@@ -81,24 +75,26 @@ export function getCalendarByType(calendarType: Calendar["type"]) {
 
 // CalendarPeriod
 
-export function getPrevPeriod(date: Date, calendarType: Calendar["type"] = "month") {
-  const prevDate =
-    calendarType === "month"
-      ? new Date(date).setMonth(date.getMonth() - 1, 1)
-      : new Date(date).setDate(date.getDate() - 7)
+export function getUtcPrevPeriod(date: Date, calendarType: Calendar["type"] = "month") {
+  const prevDate = calendarType === "month"
+    ? new Date(date).setUTCMonth(date.getUTCMonth() - 1, 1)
+    : new Date(date).setUTCDate(date.getUTCDate() - 7)
   return new Date(prevDate)
 }
 
-export function getCurrentPeriod(): Date {
-  const currentDate = new Date(new Date()).setHours(0, 0, 0, 0)
-  return new Date(currentDate)
+export function getUtcStartDay(date: Date): Date {
+  return new Date(Date.UTC(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate()
+  ))
 }
 
-export function getNextPeriod(date: Date, calendarType: Calendar["type"] = "month") {
+export function getUtcNextPeriod(date: Date, calendarType: Calendar["type"] = "month") {
   const nextDate =
     calendarType === "month"
-      ? new Date(date).setMonth(date.getMonth() + 1, 1)
-      : new Date(date).setDate(date.getDate() + 7)
+      ? new Date(date).setUTCMonth(date.getUTCMonth() + 1, 1)
+      : new Date(date).setUTCDate(date.getUTCDate() + 7)
   return new Date(nextDate)
 }
 
@@ -128,17 +124,9 @@ export function getRoundedToQuarterTime(timeStart: Date): Date {
   return time
 }
 
-export function getDayStart(date: Date): Date {
-  const dayDate: Date = new Date(date)
-  const dayStart: Date = new Date(dayDate.setHours(0, 0, 0, 0))
-
-  return dayStart
-}
-
-export function getNextDayStart(date: Date): Date {
-  const dayDate: Date = new Date(date)
-  const nextDay: Date = new Date(dayDate.setDate(dayDate.getDate() + 1))
-  const nextDayStart: Date = new Date(nextDay.setHours(0, 0, 0, 0))
+export function getUtcNextDayStart(date: Date): Date {
+  const dayStart: Date = getUtcStartDay(date)
+  const nextDayStart: Date = new Date(dayStart.setUTCDate(dayStart.getUTCDate() + 1))
 
   return nextDayStart
 }

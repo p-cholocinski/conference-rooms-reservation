@@ -2,7 +2,7 @@
 
 import { MdArrowLeft, MdArrowRight } from "react-icons/md"
 import { formatMonthYear } from "@/lib/dateTimeFormats"
-import { getCurrentPeriod, getNextPeriod, getPrevPeriod } from "@/lib/calendar"
+import { getUtcNextPeriod, getUtcPrevPeriod, getUtcStartDay } from "@/lib/calendar"
 import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams"
 
 type Props = {
@@ -17,15 +17,15 @@ export default function PeriodChange({ calendarPeriod, calendarType, className }
   const formatedMonthYear = formatMonthYear(calendarPeriod)
 
   const handlePrevPeriod = () => {
-    updateSearchParams("cp", getPrevPeriod(calendarPeriod, calendarType).valueOf().toString())
+    updateSearchParams("cp", getUtcPrevPeriod(calendarPeriod, calendarType).valueOf().toString())
   }
 
   const handleCurrentPeriod = () => {
-    updateSearchParams("cp", getCurrentPeriod().valueOf().toString())
+    updateSearchParams("cp", getUtcStartDay(new Date()).valueOf().toString())
   }
 
   const handleNextPeriod = () => {
-    updateSearchParams("cp", getNextPeriod(calendarPeriod, calendarType).valueOf().toString())
+    updateSearchParams("cp", getUtcNextPeriod(calendarPeriod, calendarType).valueOf().toString())
   }
 
   return (

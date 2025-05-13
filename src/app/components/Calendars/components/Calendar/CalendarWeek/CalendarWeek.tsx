@@ -7,7 +7,6 @@ import DaysWeek from "./DaysWeek";
 import useResizeObserver from "@/hooks/useResizeObserver";
 import DaysRow from "./DaysRow";
 import { Reservation, ReservationCategory, Room } from "@prisma/client";
-import { getCalendarDays } from "@/lib/calendar";
 
 type Props = {
   calendarDays: CalendarDay[],
@@ -25,6 +24,7 @@ type Props = {
 }
 
 export default function CalendarWeek({ calendarDays, room, reservations, rooms, reservationCategories }: Props) {
+
   const calendarWeekElement = useRef<HTMLDivElement>(null)
 
   const calendarHeight = useResizeObserver(calendarWeekElement)

@@ -7,13 +7,15 @@ type Props = {
 
 export default function ReservationMonth({ dayReservation }: Props) {
 
-  const formatedTimeRange = formatTimeRange(dayReservation.startDate, dayReservation.endDate)
+  const { startDate, endDate, description } = dayReservation
+
+  const formatedTimeRange = formatTimeRange(startDate, endDate)
 
   return (
     <div
       className="bg-neutral-500 h-5 px-1 content-center text-xs rounded-sm truncate hover:bg-neutral-700"
-      title={dayReservation.description}>
-      {formatedTimeRange + ' ' + dayReservation.description}
+      title={description}>
+      {formatedTimeRange + ' ' + description}
     </div>
   )
 }

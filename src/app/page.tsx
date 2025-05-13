@@ -2,7 +2,7 @@ import Navbar from "./components/Navbar"
 import RoomsBar from "./components/RoomsBar/RoomsBar"
 import Calendars from "./components/Calendars/Calendars"
 import { SessionProvider } from "next-auth/react"
-import { getCurrentPeriod } from "@/lib/calendar"
+import { getUtcStartDay } from "@/lib/calendar"
 
 export default async function Home(props: {
   searchParams?: Promise<{
@@ -24,8 +24,8 @@ export default async function Home(props: {
     : "month"
 
   const calendarPeriod = searchParams?.cp
-    ? new Date(parseInt(searchParams.cp))
-    : getCurrentPeriod()
+    ? getUtcStartDay(new Date(parseInt(searchParams.cp)))
+    : getUtcStartDay(new Date())
 
   return (
     <>

@@ -2,7 +2,7 @@ import { useState, useMemo, RefObject } from "react";
 import WeekRow from "@/components/WeekRow";
 import PeriodChange from "@/components/PeriodChange";
 import useClickOutside from "@/hooks/useClickOutside";
-import { getCalendarDays, getCurrentPeriod, getNextPeriod, getPrevPeriod } from "@/lib/calendar";
+import { getCalendarDays, getUtcNextPeriod, getUtcPrevPeriod, getUtcStartDay } from "@/lib/calendar";
 
 type Props = {
   selectedDate: Date,
@@ -20,15 +20,15 @@ export default function DatePicker({ selectedDate, handleSelectedDate, parentRef
   }, [selectedPeriod])
 
   const handlePrevPeriod = () => {
-    setSelectedPeriod(getPrevPeriod(selectedPeriod))
+    setSelectedPeriod(getUtcPrevPeriod(selectedPeriod))
   }
 
   const handleCurrentPeriod = () => {
-    setSelectedPeriod(getCurrentPeriod())
+    setSelectedPeriod(getUtcStartDay(new Date()))
   }
 
   const handleNextPeriod = () => {
-    setSelectedPeriod(getNextPeriod(selectedPeriod))
+    setSelectedPeriod(getUtcNextPeriod(selectedPeriod))
   }
 
   return (
