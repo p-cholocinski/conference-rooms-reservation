@@ -25,10 +25,10 @@ export default function DaysWeek({ calendarDays, room, reservations, calendarHei
   return (
     <>
       <div className="grid grid-cols-7 w-full">
-        {calendarDays.map((weekDay) => (
+        {calendarDays.map((calendarDay) => (
           <DayWeek
-            key={"day-week-" + weekDay.date.toISOString()}
-            calendarDay={weekDay}
+            key={"day-week-" + calendarDay.date.toISOString()}
+            calendarDay={calendarDay}
             room={room}
             reservations={reservations}
             calendarHeight={calendarHeight}

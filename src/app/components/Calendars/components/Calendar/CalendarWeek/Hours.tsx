@@ -1,6 +1,5 @@
-import { getHoursRange } from "@/lib/room"
+import { getHoursRange } from "@/lib/calendar"
 import { Room } from "@prisma/client"
-import { useMemo } from "react"
 
 type Props = {
   openFrom: Room["openFrom"],
@@ -9,9 +8,7 @@ type Props = {
 
 export default function Hours({ openFrom, openTo }: Props) {
 
-  const hours: string[] = useMemo(() => {
-    return getHoursRange(openFrom, openTo)
-  }, [openFrom, openTo])
+  const hours: string[] = getHoursRange(openFrom, openTo)
 
   return (
     <div

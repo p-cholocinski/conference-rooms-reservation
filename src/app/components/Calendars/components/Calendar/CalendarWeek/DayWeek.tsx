@@ -1,4 +1,3 @@
-import { useMemo } from "react"
 import ReservationWeek from "./ReservationWeek"
 import { getReservationsByDate } from "@/lib/reservation"
 import NewReservationWeekHandler from "./NewReservationWeekHandler"
@@ -21,11 +20,7 @@ type Props = {
 }
 
 export default function DayWeek({ calendarDay, room, reservations, calendarHeight, reservationFormData, setReservationFormData }: Props) {
-  const dayReservations = useMemo(() => {
-    return getReservationsByDate(reservations, calendarDay.date) as ({
-      category: ReservationCategory,
-    } & Reservation)[]
-  }, [reservations, calendarDay.date])
+  const dayReservations = getReservationsByDate(reservations, calendarDay.date) as ({ category: ReservationCategory } & Reservation)[]
 
   return (
     <div

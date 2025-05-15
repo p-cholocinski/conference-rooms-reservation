@@ -1,4 +1,5 @@
 import { formatTime } from "@/lib/dateTimeFormats"
+import { getISODate } from "@/utils/getIsoDate"
 
 export const calendars: Calendar[] = [
   {
@@ -64,7 +65,7 @@ function isCurrentMonth(date: Date, year: number, month: number) {
 }
 
 function isCurrentDay(date: Date, today: Date) {
-  return date.toISOString().slice(0, 10) === today.toISOString().slice(0, 10)
+  return getISODate(date) === getISODate(today)
 }
 
 // CalendarTypes
@@ -82,6 +83,14 @@ export function getUtcPrevPeriod(date: Date, calendarType: Calendar["type"] = "m
   return new Date(prevDate)
 }
 
+export function getUtcNextPeriod(date: Date, calendarType: Calendar["type"] = "month") {
+  const nextDate =
+    calendarType === "month"
+      ? new Date(date).setUTCMonth(date.getUTCMonth() + 1, 1)
+      : new Date(date).setUTCDate(date.getUTCDate() + 7)
+  return new Date(nextDate)
+}
+
 export function getUtcStartDay(date: Date): Date {
   return new Date(Date.UTC(
     date.getUTCFullYear(),
@@ -90,12 +99,12 @@ export function getUtcStartDay(date: Date): Date {
   ))
 }
 
-export function getUtcNextPeriod(date: Date, calendarType: Calendar["type"] = "month") {
-  const nextDate =
-    calendarType === "month"
-      ? new Date(date).setUTCMonth(date.getUTCMonth() + 1, 1)
-      : new Date(date).setUTCDate(date.getUTCDate() + 7)
-  return new Date(nextDate)
+export function getLocalStartDay(date: Date): Date {
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate()
+  )
 }
 
 // Time
@@ -129,4 +138,31 @@ export function getUtcNextDayStart(date: Date): Date {
   const nextDayStart: Date = new Date(dayStart.setUTCDate(dayStart.getUTCDate() + 1))
 
   return nextDayStart
+}
+
+export function getLocalNextDayStart(date: Date): Date {
+  const dayStart: Date = getLocalStartDay(date)
+  const nextDayStart: Date = new Date(dayStart.setDate(dayStart.getDate() + 1))
+
+  return nextDayStart
+}
+
+// Get hours
+
+export function getHoursRange(startHour: number, endHour: number): string[] {
+  if (startHour < 0 || startHour > 23 || endHour < 0 || endHour > 23) {
+    throw new Error("Godziny muszą mieścić się w zakresie od 0 do 23.")
+  }
+  if (startHour >= endHour) {
+    throw new Error("Godzina początkowa musi być mniejsza od godziny końcowej.")
+  }
+
+  const hours: string[] = []
+
+  for (let hour = startHour; hour < endHour; hour++) {
+    const formattedHour = hour.toString().padStart(2, "0") + ":00"
+    hours.push(formattedHour)
+  }
+
+  return hours;
 }

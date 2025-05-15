@@ -2,6 +2,7 @@ import { MouseEvent, useState } from "react"
 import { getDayPartHeight, getNewReservationTimeFrom } from "@/lib/reservation"
 import NewReservationWeek from "./NewReservationWeek"
 import { Reservation, ReservationCategory, Room } from "@prisma/client"
+import { getISODate } from "@/utils/getIsoDate"
 
 type Props = {
   date: Date,
@@ -14,6 +15,10 @@ type Props = {
 
 export default function NewReservationWeekHandler({ date, room, calendarHeight, dayReservations, reservationFormData, setReservationFormData }: Props) {
   const [initialTime, setInitialTime] = useState<Date | null>(null)
+
+  const showNewReservationWeek = !reservationFormData?.reservationId
+    && reservationFormData
+    && getISODate(reservationFormData?.date) === getISODate(date)
 
   const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
     if (e.button === 0) {
@@ -39,7 +44,7 @@ export default function NewReservationWeekHandler({ date, room, calendarHeight, 
         onMouseDown={(e) => handleMouseDown(e)}
       >
       </div>
-      {(!reservationFormData?.reservationId && reservationFormData?.date?.getTime() === date.getTime()) &&
+      {showNewReservationWeek &&
         <NewReservationWeek
           date={date}
           calendarHeight={calendarHeight}

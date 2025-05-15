@@ -1,11 +1,12 @@
 import { Reservation, Room } from "@prisma/client"
-import { getUtcNextDayStart } from "./calendar"
+import { getLocalStartDay, getUtcNextDayStart } from "./calendar"
+import { getISODate } from "@/utils/getIsoDate"
 
 // Get Reservations
 
 export function getReservationsByDate(reservations: Reservation[], date: Date) {
   const outReservations = reservations.filter((reservation) => (
-    reservation.startDate.toDateString() === date.toDateString()
+    getISODate(reservation.startDate) === getISODate(date)
   ))
   outReservations.sort((a, b) => (a.startDate > b.startDate) ? 1 : ((b.startDate > a.startDate) ? -1 : 0))
 
@@ -16,7 +17,7 @@ export function getReservationsByDate(reservations: Reservation[], date: Date) {
 
 export function getReservationWeekTop(dateStart: Date, room: { openFrom: Room["openFrom"], openTo: Room["openTo"] }, parentElementHeight: number): number {
   const startDay = new Date(new Date(dateStart).setHours((room.openFrom as number), 0, 0, 0))
-  const endDay = new Date(new Date(dateStart).setHours((room.openTo as number) + 1, 0, 0, 0))
+  const endDay = new Date(new Date(dateStart).setHours((room.openTo as number), 0, 0, 0))
 
   const totalMillisecondsInDay = endDay.getTime() - startDay.getTime()
   const elapsedMillisecondsInDay = dateStart.getTime() - startDay.getTime()
@@ -28,7 +29,7 @@ export function getReservationWeekTop(dateStart: Date, room: { openFrom: Room["o
 
 export function getReservationWeekBottom(dateEnd: Date, room: { openFrom: Room["openFrom"], openTo: Room["openTo"] }, parentElementHeight: number): number {
   const startDay = new Date(new Date(dateEnd).setHours((room.openFrom as number), 0, 0, 0))
-  const endDay = new Date(new Date(dateEnd).setHours((room.openTo as number) + 1, 0, 0, 0))
+  const endDay = new Date(new Date(dateEnd).setHours((room.openTo as number), 0, 0, 0))
 
   const totalMillisecondsInDay = endDay.getTime() - startDay.getTime()
   const leftMillisecondsInDay = endDay.getTime() - dateEnd.getTime()
@@ -60,7 +61,7 @@ export function calculateElementPositionStyle(parentLayout: { top: number, left:
 // New Reservation WeekCalendar
 
 export function getDayPartHeight(room: { openFrom: Room["openFrom"], openTo: Room["openTo"] }, parentElementHeight: number, minutesInterval: number): number {
-  const hoursDiff: number = ((room.openTo as number) - (room.openFrom as number)) + 1
+  const hoursDiff: number = ((room.openTo as number) - (room.openFrom as number))
   const hourParts: number = 60 / minutesInterval
   const dayParts: number = hoursDiff * hourParts
   const dayPartHeight: number = parentElementHeight / dayParts
@@ -102,8 +103,7 @@ export function getNewReservationTime(date: Date, top: number, dayPartHeight: nu
   const hoursFromDayStart: number = (roomOpenFrom as number) + hoursFromOpen
   const millisecondsFromDayStart: number = hoursFromDayStart * 60 * 60 * 1000
 
-  const newReservationTime: Date = new Date(date)
-  newReservationTime.setHours(0, 0, 0, 0)
+  const newReservationTime: Date = getLocalStartDay(date)
   newReservationTime.setMilliseconds(newReservationTime.getMilliseconds() + millisecondsFromDayStart)
 
   return newReservationTime

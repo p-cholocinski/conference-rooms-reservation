@@ -11,7 +11,7 @@ import SelectInput from "@/components/inputs/SelectInput"
 import Button from "@/components/Button"
 import { upsertReservation } from "@/app/actions/reservation"
 import { withClientCallback } from "@/app/actions/withClientCallback"
-import { getUtcNextDayStart, getRoundedToQuarterTime, getUtcStartDay } from "@/lib/calendar"
+import { getRoundedToQuarterTime, getUtcStartDay, getLocalNextDayStart } from "@/lib/calendar"
 import { getTimesAfterRoomChange } from "@/lib/reservation"
 import { ReservationCategory, Room } from "@prisma/client"
 import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams"
@@ -36,19 +36,19 @@ export default function ReservationForm({ reservationFormData, rooms, reservatio
 
   const descriptionRef = useRef<string>(reservationFormData.description || "") // useRef is used to avoid re-rendering the component on every change
   const date = reservationFormData.date ? getUtcStartDay(new Date(reservationFormData.date)) : getUtcStartDay(new Date())
-  const startDate = reservationFormData.startDate ? getRoundedToQuarterTime(new Date(reservationFormData.startDate)) : getRoundedToQuarterTime(new Date())
-  const endDate = reservationFormData.endDate ? getRoundedToQuarterTime(new Date(reservationFormData.endDate)) : new Date(new Date(startDate).setMinutes(startDate.getMinutes() + 15))
+  const startDate = reservationFormData.startDate ? getRoundedToQuarterTime(reservationFormData.startDate) : getRoundedToQuarterTime(new Date())
+  const endDate = reservationFormData.endDate ? getRoundedToQuarterTime(reservationFormData.endDate) : new Date(startDate.setMinutes(startDate.getMinutes() + 15))
   const room = reservationFormData.roomId ? rooms.find(room => room.id === reservationFormData.roomId) : undefined
   const categoryId = reservationFormData.categoryId
 
   const { data: session } = useSession()
   const updateSearchParams = useUpdateSearchParams()
 
-  const timeMin = new Date(new Date(date).setHours(room?.openFrom || 0, 0, 0, 0))
+  const timeMin = new Date(date.setHours(room?.openFrom || 0, 0, 0, 0))
 
-  const timeMinEndDate = new Date(new Date(startDate).setMinutes(startDate.getMinutes() + 15))
+  const timeMinEndDate = new Date(startDate.setMinutes(startDate.getMinutes() + 15))
 
-  const timeMax = room ? new Date(new Date(date).setHours(room?.openTo, 0, 0, 0)) : getUtcNextDayStart(timeMin)
+  const timeMax = room ? new Date(date.setHours(room?.openTo, 0, 0, 0)) : getLocalNextDayStart(timeMin)
 
   const roomsList = rooms.map((room) => ({ value: room.id, label: room.name }))
 

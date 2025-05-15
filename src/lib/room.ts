@@ -39,23 +39,3 @@ export function getNextPicturePath(pictures: RoomPicture[], currentPicturePath: 
 
   return pictures[nextPictureNum].url
 }
-
-// Get hours
-
-export function getHoursRange(startHour: number, endHour: number): string[] {
-  if (startHour < 0 || startHour > 23 || endHour < 0 || endHour > 23) {
-    throw new Error("Godziny muszą mieścić się w zakresie od 0 do 23.")
-  }
-  if (startHour >= endHour) {
-    throw new Error("Godzina początkowa musi być mniejsza od godziny końcowej.")
-  }
-
-  const hours: string[] = []
-
-  for (let hour = startHour; hour <= endHour; hour++) {
-    const formattedHour = hour.toString().padStart(2, "0") + ":00"
-    hours.push(formattedHour)
-  }
-
-  return hours;
-}
