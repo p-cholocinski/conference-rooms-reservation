@@ -1,4 +1,4 @@
-import { useState, useMemo, RefObject } from "react";
+import { useState, RefObject } from "react";
 import WeekRow from "@/components/WeekRow";
 import PeriodChange from "@/components/PeriodChange";
 import useClickOutside from "@/hooks/useClickOutside";
