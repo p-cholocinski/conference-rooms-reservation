@@ -15,9 +15,7 @@ export default function DatePicker({ selectedDate, handleSelectedDate, parentRef
 
   useClickOutside(parentRef, () => handleSelectedDate(null))
 
-  const calendarDays: CalendarDay[] = useMemo(() => {
-    return getCalendarDays(selectedPeriod, 'month')
-  }, [selectedPeriod])
+  const calendarDays: CalendarDay[] = getCalendarDays(selectedPeriod, 'month')
 
   const handlePrevPeriod = () => {
     setSelectedPeriod(getUtcPrevPeriod(selectedPeriod))

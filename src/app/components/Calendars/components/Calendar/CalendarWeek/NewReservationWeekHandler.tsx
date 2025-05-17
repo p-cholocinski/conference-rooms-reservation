@@ -17,8 +17,7 @@ export default function NewReservationWeekHandler({ date, room, calendarHeight, 
   const [initialTime, setInitialTime] = useState<Date | null>(null)
 
   const showNewReservationWeek = !reservationFormData?.reservationId
-    && reservationFormData
-    && getISODate(reservationFormData?.date) === getISODate(date)
+    && reservationFormData && getISODate(reservationFormData?.date) === getISODate(date)
 
   const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
     if (e.button === 0) {
@@ -32,7 +31,7 @@ export default function NewReservationWeekHandler({ date, room, calendarHeight, 
         ...reservationFormData,
         date: date,
         startDate: initialTime,
-        endDate: new Date(new Date(initialTime).setMinutes(initialTime.getMinutes() + 15)),
+        endDate: new Date(new Date(initialTime).setUTCMinutes(initialTime.getUTCMinutes() + 15)),
       })
     }
   }
@@ -40,7 +39,7 @@ export default function NewReservationWeekHandler({ date, room, calendarHeight, 
   return (
     <>
       <div
-        className={`h-full w-full ${reservationFormData?.date ? 'absolute' : ''}`}
+        className={`h-full w-full ${showNewReservationWeek ? 'absolute' : ''}`}
         onMouseDown={(e) => handleMouseDown(e)}
       >
       </div>

@@ -99,14 +99,6 @@ export function getUtcStartDay(date: Date): Date {
   ))
 }
 
-export function getLocalStartDay(date: Date): Date {
-  return new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate()
-  )
-}
-
 // Time
 
 export function getDateTimeList(timeStart: Date, timeEnd: Date) {
@@ -117,7 +109,7 @@ export function getDateTimeList(timeStart: Date, timeEnd: Date) {
       value: timeStart.toISOString(),
       label: formatTime(timeStart),
     })
-    timeStart.setMinutes(timeStart.getMinutes() + 15)
+    timeStart.setUTCMinutes(timeStart.getUTCMinutes() + 15)
   }
 
   return timeList
@@ -125,10 +117,10 @@ export function getDateTimeList(timeStart: Date, timeEnd: Date) {
 
 export function getRoundedToQuarterTime(timeStart: Date): Date {
   const time: Date = new Date(timeStart)
-  const timeMinutes: number = time.getMinutes()
+  const timeMinutes: number = time.getUTCMinutes()
   const quarterCount: number = Math.ceil(timeMinutes / 15)
 
-  time.setMinutes(15 * quarterCount, 0, 0)
+  time.setUTCMinutes(15 * quarterCount, 0, 0)
 
   return time
 }
@@ -140,18 +132,11 @@ export function getUtcNextDayStart(date: Date): Date {
   return nextDayStart
 }
 
-export function getLocalNextDayStart(date: Date): Date {
-  const dayStart: Date = getLocalStartDay(date)
-  const nextDayStart: Date = new Date(dayStart.setDate(dayStart.getDate() + 1))
-
-  return nextDayStart
-}
-
 // Get hours
 
 export function getHoursRange(startHour: number, endHour: number): string[] {
-  if (startHour < 0 || startHour > 23 || endHour < 0 || endHour > 23) {
-    throw new Error("Godziny muszą mieścić się w zakresie od 0 do 23.")
+  if (startHour < 0 || startHour > 24 || endHour < 0 || endHour > 24) {
+    throw new Error("Godziny muszą mieścić się w zakresie od 0 do 24.")
   }
   if (startHour >= endHour) {
     throw new Error("Godzina początkowa musi być mniejsza od godziny końcowej.")

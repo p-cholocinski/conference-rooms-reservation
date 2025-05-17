@@ -51,7 +51,7 @@ export default function NewReservationWeek({ date, room, calendarHeight, initial
   const formatedTimeRange = formatTimeRange(timeFrom, timeTo)
 
   const handleMouseMoveOutside = (e: MouseEvent<HTMLDivElement>) => {
-    if (initialTime && initialTop && !overlaps) {
+    if (initialTime && (initialTop !== null) && !overlaps) {
       const mouseY: number = e.nativeEvent.offsetY
       const changeTop: boolean = mouseY < initialTop
 
@@ -68,7 +68,7 @@ export default function NewReservationWeek({ date, room, calendarHeight, initial
           setReservationFormData({
             ...reservationFormData,
             startDate: time,
-            endDate: new Date(new Date(initialTime).setMinutes(initialTime.getMinutes() + 15)),
+            endDate: new Date(new Date(initialTime).setUTCMinutes(initialTime.getUTCMinutes() + 15)),
           })
         } else {
           setReservationFormData({

@@ -1,5 +1,5 @@
 import { Reservation, Room } from "@prisma/client"
-import { getLocalStartDay, getUtcNextDayStart } from "./calendar"
+import { getUtcNextDayStart, getUtcStartDay } from "./calendar"
 import { getISODate } from "@/utils/getIsoDate"
 
 // Get Reservations
@@ -16,8 +16,8 @@ export function getReservationsByDate(reservations: Reservation[], date: Date) {
 // Reservation WeekCalendar Position
 
 export function getReservationWeekTop(dateStart: Date, room: { openFrom: Room["openFrom"], openTo: Room["openTo"] }, parentElementHeight: number): number {
-  const startDay = new Date(new Date(dateStart).setHours((room.openFrom as number), 0, 0, 0))
-  const endDay = new Date(new Date(dateStart).setHours((room.openTo as number), 0, 0, 0))
+  const startDay = new Date(new Date(dateStart).setUTCHours((room.openFrom as number), 0, 0, 0))
+  const endDay = new Date(new Date(dateStart).setUTCHours((room.openTo as number), 0, 0, 0))
 
   const totalMillisecondsInDay = endDay.getTime() - startDay.getTime()
   const elapsedMillisecondsInDay = dateStart.getTime() - startDay.getTime()
@@ -28,8 +28,8 @@ export function getReservationWeekTop(dateStart: Date, room: { openFrom: Room["o
 }
 
 export function getReservationWeekBottom(dateEnd: Date, room: { openFrom: Room["openFrom"], openTo: Room["openTo"] }, parentElementHeight: number): number {
-  const startDay = new Date(new Date(dateEnd).setHours((room.openFrom as number), 0, 0, 0))
-  const endDay = new Date(new Date(dateEnd).setHours((room.openTo as number), 0, 0, 0))
+  const startDay = new Date(new Date(dateEnd).setUTCHours((room.openFrom as number), 0, 0, 0))
+  const endDay = new Date(new Date(dateEnd).setUTCHours((room.openTo as number), 0, 0, 0))
 
   const totalMillisecondsInDay = endDay.getTime() - startDay.getTime()
   const leftMillisecondsInDay = endDay.getTime() - dateEnd.getTime()
@@ -103,8 +103,8 @@ export function getNewReservationTime(date: Date, top: number, dayPartHeight: nu
   const hoursFromDayStart: number = (roomOpenFrom as number) + hoursFromOpen
   const millisecondsFromDayStart: number = hoursFromDayStart * 60 * 60 * 1000
 
-  const newReservationTime: Date = getLocalStartDay(date)
-  newReservationTime.setMilliseconds(newReservationTime.getMilliseconds() + millisecondsFromDayStart)
+  const newReservationTime: Date = getUtcStartDay(date)
+  newReservationTime.setUTCMilliseconds(newReservationTime.getUTCMilliseconds() + millisecondsFromDayStart)
 
   return newReservationTime
 }
@@ -113,10 +113,10 @@ export function getNewReservationTime(date: Date, top: number, dayPartHeight: nu
 
 export function getTimesAfterRoomChange(startDate: Date, endDate: Date, roomOpenFrom: Room["openFrom"], roomOpenTo: Room["openTo"]) {
   const timeMin = new Date(
-    new Date(startDate).setHours(roomOpenFrom || 0, 0, 0, 0)
+    new Date(startDate).setUTCHours(roomOpenFrom || 0, 0, 0, 0)
   )
   const timeMax = roomOpenTo
-    ? new Date(new Date(endDate).setHours(roomOpenTo, 0, 0, 0))
+    ? new Date(new Date(endDate).setUTCHours(roomOpenTo, 0, 0, 0))
     : getUtcNextDayStart(timeMin)
   const timeDiff = endDate.getTime() - startDate.getTime()
 

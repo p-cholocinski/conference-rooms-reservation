@@ -1,5 +1,6 @@
 export function formatDate(date: Date | string | undefined) {
   const format = new Intl.DateTimeFormat("pl-PL", {
+    timeZone: "UTC",
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
@@ -16,6 +17,7 @@ export function formatDate(date: Date | string | undefined) {
 
 export function formatTime(time: Date | string | undefined) {
   const format = new Intl.DateTimeFormat("pl-PL", {
+    timeZone: "UTC",
     hour: "numeric",
     minute: "numeric",
   })
@@ -34,6 +36,7 @@ export function formatDateTimeRange(
   dateTimeEnd: Date | string | undefined,
 ): string {
   const format = new Intl.DateTimeFormat("pl-PL", {
+    timeZone: "UTC",
     weekday: 'long',
     day: "numeric",
     month: "long",
@@ -57,6 +60,7 @@ export function formatMonthYear(
   date: Date | string | undefined
 ) {
   const format = new Intl.DateTimeFormat("pl-PL", {
+    timeZone: "UTC",
     month: 'long',
     year: 'numeric',
   })
@@ -80,6 +84,7 @@ export function formatTimeRange(
   timeEnd: Date | string | undefined,
 ) {
   const format = new Intl.DateTimeFormat("pl-PL", {
+    timeZone: "UTC",
     hour: "numeric",
     minute: "numeric",
   })

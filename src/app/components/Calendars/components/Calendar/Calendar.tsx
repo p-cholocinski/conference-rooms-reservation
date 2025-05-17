@@ -29,8 +29,8 @@ export default async function Calendar({ roomId, calendar, calendarPeriod }: Pro
     openTo: Room["openTo"],
   } = roomId
       ? rooms.find(room => room.id === roomId)
-      ?? { id: null, name: null, openFrom: 0, openTo: 23 }
-      : { id: null, name: null, openFrom: 0, openTo: 23 }
+      ?? { id: null, name: null, openFrom: 0, openTo: 24 }
+      : { id: null, name: null, openFrom: 0, openTo: 24 }
 
   const reservations = roomId
     ? await prisma.reservation.findMany({
