@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import WeekRow from "@/components/WeekRow";
 import Hours from "./Hours";
-import DaysWeek from "./DaysWeek";
+import DaysWeek from "./days-week/DaysWeek";
 import useResizeObserver from "@/hooks/useResizeObserver";
 import DaysRow from "./DaysRow";
 import { Reservation, ReservationCategory, Room } from "@prisma/client";

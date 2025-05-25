@@ -26,19 +26,7 @@ export default function ReservationWeek({ room, dayReservation, calendarHeight, 
 
   const isEditing = reservationFormData?.reservationId === dayReservation.id
 
-  const {
-    description,
-    startDate,
-    endDate,
-  } = isEditing ? {
-    description: reservationFormData?.description || dayReservation.description,
-    startDate: reservationFormData?.startDate || dayReservation.startDate,
-    endDate: reservationFormData?.endDate || dayReservation.endDate,
-  } : {
-      description: dayReservation.description,
-      startDate: dayReservation.startDate,
-      endDate: dayReservation.endDate,
-    }
+  const { description, startDate, endDate } = dayReservation
 
   const formatedTimeRange = formatTimeRange(startDate, endDate)
 
@@ -51,7 +39,7 @@ export default function ReservationWeek({ room, dayReservation, calendarHeight, 
 
   return (
     <div
-      className={`absolute left-0 right-0 mx-1 text-xs rounded-md overflow-hidden hover:cursor-pointer hover:bg-neutral-700 ${reservationCardVisible || isEditing ? 'bg-neutral-800' : 'bg-neutral-500'}`}
+      className={`absolute left-0 right-0 mx-1 text-xs rounded-md overflow-hidden hover:cursor-pointer hover:bg-neutral-700 ${reservationCardVisible ? 'bg-neutral-800' : 'bg-neutral-500'} ${isEditing ? 'opacity-40' : 'opacity-100'}`}
       style={{ top: elementTop + 'px', bottom: elementBottom + 'px' }}
       ref={reservationWeekRef}
     >

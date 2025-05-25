@@ -1,6 +1,6 @@
-import ReservationWeek from "./ReservationWeek"
+import ReservationWeek from "./reservation-week/ReservationWeek"
+import NewReservationWeekHandler from "./new-reservation-week/NewReservationWeekHandler"
 import { getReservationsByDate } from "@/lib/reservation"
-import NewReservationWeekHandler from "./NewReservationWeekHandler"
 import { Reservation, ReservationCategory, Room } from "@prisma/client"
 
 type Props = {

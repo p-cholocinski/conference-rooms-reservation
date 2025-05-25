@@ -16,8 +16,7 @@ type Props = {
 export default function NewReservationWeekHandler({ date, room, calendarHeight, dayReservations, reservationFormData, setReservationFormData }: Props) {
   const [initialTime, setInitialTime] = useState<Date | null>(null)
 
-  const showNewReservationWeek = !reservationFormData?.reservationId
-    && reservationFormData && getISODate(reservationFormData?.date) === getISODate(date)
+  const showNewReservationWeek = reservationFormData && getISODate(reservationFormData?.date) === getISODate(date)
 
   const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
     if (e.button === 0) {

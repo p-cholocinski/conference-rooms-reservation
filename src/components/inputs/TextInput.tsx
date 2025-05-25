@@ -1,4 +1,5 @@
 import { HTMLInputTypeAttribute } from "react"
+import InputError from "../InputError"
 
 type Props = {
   name: string,
@@ -21,7 +22,6 @@ export default function TextInput({ name, placeholder, type = "text", value, dis
   return (
     <div
       className="relative text-sm"
-      onClick={onClick}
     >
       <input
         className={`block px-2 pt-3 pb-2 border border-neutral-600 rounded-sm outline-none bg-transparent w-full focus:border-neutral-400 peer ${readOnly && "cursor-pointer"} ${errorMsg ? "border-red-900" : ""}`}
@@ -34,6 +34,7 @@ export default function TextInput({ name, placeholder, type = "text", value, dis
         readOnly={readOnly}
         defaultValue={!readOnly ? inputValue : undefined}
         onChange={(!readOnly && onChange) ? (e) => onChange(e.target.value) : undefined}
+        onClick={onClick}
       />
       <label
         htmlFor={displayName}
@@ -41,11 +42,9 @@ export default function TextInput({ name, placeholder, type = "text", value, dis
       >
         {placeholder}
       </label>
-      <p
-        className="absolute left-2 -translate-y-1/2 bg-neutral-800 text-xs px-1 text-red-600"
-      >
-        {errorMsg}
-      </p>
+      <InputError
+        errorMsg={errorMsg}
+      />
       {displayValue && (
         <input
           type="hidden"

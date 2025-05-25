@@ -4,7 +4,6 @@ import prisma from "@/lib/prisma"
 import { createReservationSchema } from "@/lib/zod"
 import { Prisma, Reservation } from "@prisma/client"
 import { revalidatePath } from "next/cache"
-import { parseNumber } from "@/utils/parseNumber"
 
 type CreateReservationType = {
   errors: Partial<{
@@ -19,17 +18,14 @@ type CreateReservationType = {
 } | undefined
 
 export async function upsertReservation(_prevState: unknown, formData: FormData, id?: Reservation["id"]): Promise<CreateReservationType> {
-  const roomId = parseNumber(formData.get("roomId"))
-  const categoryId = parseNumber(formData.get("categoryId"))
-  const userId = parseNumber(formData.get("userId"))
 
   const validatedFields = createReservationSchema.safeParse({
     description: formData.get("description"),
     startDate: formData.get("startDate"),
     endDate: formData.get("endDate"),
-    roomId: roomId,
-    categoryId: categoryId,
-    userId: userId,
+    roomId: formData.get("roomId"),
+    categoryId: formData.get("categoryId"),
+    userId: formData.get("userId"),
   })
 
   if (!validatedFields.success) {
@@ -40,6 +36,23 @@ export async function upsertReservation(_prevState: unknown, formData: FormData,
 
   const reservationId = id ?? -1
 
+  const existingReservations = await prisma.reservation.findFirst({
+    where: {
+      id: { not: reservationId },
+      roomId: validatedFields.data.roomId,
+      startDate: { lt: validatedFields.data.endDate },
+      endDate: { gt: validatedFields.data.startDate },
+    }
+  })
+
+  if (existingReservations) {
+    return {
+      errors: {
+        startDate: ["Rezerwacja nakłada się na inną rezerwację"],
+      },
+    }
+  }
+
   const reservationData = {
     description: validatedFields.data.description,
     startDate: validatedFields.data.startDate,
@@ -48,7 +61,6 @@ export async function upsertReservation(_prevState: unknown, formData: FormData,
     category: { connect: { id: validatedFields.data.categoryId } },
     user: { connect: { id: validatedFields.data.userId } }
   }
-
   const upsertData: Prisma.ReservationUpsertArgs = {
     where: { id: reservationId },
     create: reservationData,

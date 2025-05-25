@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import Location from "./Location/Location";
+import Location from "./location/Location";
 
 export default async function RoomsBar() {
 

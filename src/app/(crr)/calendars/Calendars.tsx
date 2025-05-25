@@ -1,6 +1,6 @@
-import PeriodChange from "./components/PeriodChange"
-import TypeChange from "./components/TypeChange"
-import Calendar from "./components/Calendar/Calendar"
+import PeriodChange from "./PeriodChange"
+import TypeChange from "./TypeChange"
+import Calendar from "./calendar/Calendar"
 import { Room } from "@prisma/client"
 import { getCalendarByType } from "@/lib/calendar"
 

@@ -18,7 +18,7 @@ export default function DropDown({ options, isOpen, scrollToValue, minWidht, onC
 
   useClickOutside(parentRef, () => onClick(""))
 
-  if (isOpen && scrollToValue) {
+  if (isOpen && scrollToValue && !selectedRef.current) {
     requestAnimationFrame(() => {
       selectedRef.current?.scrollIntoView({ behavior: "instant", block: "center" })
     });
@@ -26,7 +26,7 @@ export default function DropDown({ options, isOpen, scrollToValue, minWidht, onC
 
   return (
     <div
-      className="absolute bg-neutral-600 min-w-28 max-h-44 z-10 translate-y-1 rounded-md text-sm overflow-y-scroll"
+      className="absolute bg-neutral-600 min-w-28 max-h-44 z-20 translate-y-1 rounded-md text-sm overflow-y-scroll"
       style={{ minWidth: minWidht }}
     >
       {options.map(option => (

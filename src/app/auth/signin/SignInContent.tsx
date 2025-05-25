@@ -6,7 +6,7 @@ import { useToast } from "@/hooks/useToast"
 import Form from "next/form"
 import TextInput from "@/components/inputs/TextInput"
 import Button from "@/components/Button"
-import FormLayout from "@/app/components/Forms/FormLayout"
+import FormLayout from "@/components/forms/FormLayout"
 
 export default function SignInContent() {
   const router = useRouter()

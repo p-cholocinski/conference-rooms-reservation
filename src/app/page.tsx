@@ -1,6 +1,6 @@
-import Navbar from "./components/Navbar"
-import RoomsBar from "./components/RoomsBar/RoomsBar"
-import Calendars from "./components/Calendars/Calendars"
+import Navbar from "./(crr)/Navbar"
+import RoomsBar from "./(crr)/rooms-bar/RoomsBar"
+import Calendars from "./(crr)/calendars/Calendars"
 import { SessionProvider } from "next-auth/react"
 import { getUtcStartDay } from "@/lib/calendar"
 

@@ -1,5 +1,5 @@
-import CalendarMonth from "./CalendarMonth/CalendarMonth";
-import CalendarWeek from "./CalendarWeek/CalendarWeek";
+import CalendarMonth from "./calendar-month/CalendarMonth";
+import CalendarWeek from "./calendar-week/CalendarWeek";
 import { getCalendarDays, getUtcNextDayStart } from "@/lib/calendar";
 import { Room } from "@prisma/client";
 import prisma from "@/lib/prisma";

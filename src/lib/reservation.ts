@@ -134,3 +134,19 @@ export function getTimesAfterRoomChange(startDate: Date, endDate: Date, roomOpen
     }
   }
 }
+
+export function isReservationOverlaps(startDate: Date, endDate: Date, reservationId: Reservation["id"] | undefined, reservations: Reservation[]) {
+  return reservations.some((reservation) => {
+    const rStartDate = reservation.startDate
+    const rEndDate = reservation.endDate
+
+    return (
+      (reservationId !== reservation.id) &&
+      (
+        (startDate > rStartDate && startDate < rEndDate) ||
+        (endDate > rStartDate && endDate < rEndDate) ||
+        (startDate <= rStartDate && endDate >= rEndDate)
+      )
+    )
+  })
+}

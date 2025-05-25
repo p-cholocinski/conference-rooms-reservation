@@ -31,7 +31,7 @@ export default function DatePicker({ selectedDate, handleSelectedDate, parentRef
 
   return (
     <div
-      className="absolute translate-y-1 bg-neutral-600 p-3 rounded-md z-10"
+      className="absolute translate-y-1 bg-neutral-600 p-3 rounded-md z-20"
     >
       <PeriodChange
         calendarPeriod={selectedPeriod}

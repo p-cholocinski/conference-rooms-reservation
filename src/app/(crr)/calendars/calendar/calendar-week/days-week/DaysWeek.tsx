@@ -1,7 +1,7 @@
 import { useState } from "react"
 import DayWeek from "./DayWeek"
 import { Reservation, ReservationCategory, Room } from "@prisma/client"
-import ReservationForm from "@/app/components/Forms/ReservationForm"
+import ReservationForm from "@/components/forms/reservation-form/ReservationForm"
 
 type Props = {
   calendarDays: CalendarDay[],
@@ -47,6 +47,7 @@ export default function DaysWeek({ calendarDays, room, reservations, calendarHei
             },
           }}
           rooms={rooms}
+          reservations={reservations}
           reservationCategories={reservationCategories}
           setReservationFormData={setReservationFormData}
         />

@@ -1,6 +1,6 @@
 import { signOut } from "@/auth";
 import { redirect } from "next/navigation";
-import FormLayout from "@/app/components/Forms/FormLayout";
+import FormLayout from "@/components/forms/FormLayout";
 import Button from "@/components/Button";
 import Form from "next/form";
 

@@ -96,8 +96,7 @@ export function formatTimeRange(
     return "Invalid time range"
   }
 
-  const formatedTime =
-    format.formatRange(start, end)
+  const formatedTime = format.formatRange(start, end)
 
   return formatedTime
 }

@@ -13,9 +13,9 @@ type Calendar = {
 
 type ReservationFormType = {
   description?: string,
-  date?: Date,
-  startDate?: Date,
-  endDate?: Date,
+  date: Date,
+  startDate: Date,
+  endDate: Date,
   roomId?: number,
   categoryId?: number,
   reservationId?: number,

@@ -1,7 +1,7 @@
 'use client'
 
 import { MdArrowDropUp } from "react-icons/md"
-import Room from "./Room/Room"
+import Room from "./room/Room"
 import { useState } from "react"
 import { Room as RoomType, RoomParameter, RoomPicture, RoomToRoomParameter, Location as LocationType } from "@prisma/client"
 

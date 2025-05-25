@@ -8,7 +8,7 @@ type Props = {
   } & RoomToRoomParameter)[]
 }
 
-export default function Parameters({ parameters }: Props) {
+export default function c({ parameters }: Props) {
   return (
     <div>
       <div className="font-bold text-center border-b-2 border-neutral-400">Parametry</div>

@@ -1,7 +1,7 @@
 import Image from "next/image"
 import { getMainPicturePath } from "@/lib/room"
 import { RoomParameter, RoomPicture, RoomToRoomParameter, Room as RoomType } from "@prisma/client"
-import RoomCard from "./RoomCard/RoomCard"
+import RoomCard from "./room-card/RoomCard"
 import { useState } from "react"
 import { useUpdateSearchParams } from "@/hooks/useUpdateSearchParams"
 import { useSearchParams } from "next/navigation"

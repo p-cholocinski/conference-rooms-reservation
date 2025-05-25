@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from "react"
+import { MouseEvent, useEffect, useRef, useState } from "react"
 import useMouseup from "@/hooks/useMouseup"
 import {
   getDayPartHeight,
@@ -26,6 +26,8 @@ type Props = {
 export default function NewReservationWeek({ date, room, calendarHeight, initialTime, dayReservations, reservationFormData, setInitialTime, setReservationFormData }: Props) {
   const [overlaps, setOverlaps] = useState<boolean>(false)
 
+  const newReservationWeekRef = useRef<HTMLDivElement>(null)
+
   const timeFrom: Date = reservationFormData.startDate as Date
   const timeTo: Date = reservationFormData.endDate as Date
 
@@ -40,6 +42,14 @@ export default function NewReservationWeek({ date, room, calendarHeight, initial
     })
     setInitialTime(null)
   })
+
+  useEffect(() => {
+    if (reservationFormData.visible) {
+      requestAnimationFrame(() => {
+        newReservationWeekRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
+      })
+    }
+  }, [reservationFormData.visible, timeFrom, timeTo, roomId])
 
   const dayPartHeight: number = getDayPartHeight(room, calendarHeight, 15)
   const initialTop: number | null = initialTime && getReservationWeekTop(initialTime, room, calendarHeight)
@@ -60,8 +70,8 @@ export default function NewReservationWeek({ date, room, calendarHeight, initial
         : getNewReservationTimeTo(date, mouseY, calendarHeight, dayPartHeight, room.openFrom as number)
 
       const isOverlaps: boolean = changeTop
-        ? dayReservations.find((dayReservation) => dayReservation.endDate < timeTo && dayReservation.endDate > time) !== undefined
-        : dayReservations.find((dayReservation) => dayReservation.startDate < time && dayReservation.startDate > timeFrom) !== undefined
+        ? dayReservations.findIndex((dayReservation) => dayReservation.endDate < timeTo && dayReservation.endDate > time) !== -1
+        : dayReservations.findIndex((dayReservation) => dayReservation.startDate < time && dayReservation.startDate > timeFrom) !== -1
 
       if (!isOverlaps) {
         if (changeTop) {
@@ -84,7 +94,7 @@ export default function NewReservationWeek({ date, room, calendarHeight, initial
   }
 
   const handleMouseMoveInside = (e: MouseEvent<HTMLDivElement>) => {
-    if (overlaps === true) setOverlaps(false)
+    if (overlaps) setOverlaps(false)
 
     if (initialTime && Math.round(partsCount) > 1) {
       const changeTop: boolean = initialTop !== elementTop
@@ -126,6 +136,7 @@ export default function NewReservationWeek({ date, room, calendarHeight, initial
         className={`absolute left-0 right-0 rounded-md overflow-hidden bg-neutral-800 ${partsCount <= 2 ? "px-1 text-xs/3" : "p-1 text-xs"}`}
         style={{ top: elementTop + 'px', bottom: elementBottom + 'px' }}
         onMouseMove={(e) => handleMouseMoveInside(e)}
+        ref={newReservationWeekRef}
       >
         <div
           className={`${partsCount <= 3 && "whitespace-nowrap"}`}

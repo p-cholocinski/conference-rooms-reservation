@@ -151,3 +151,12 @@ export function getHoursRange(startHour: number, endHour: number): string[] {
 
   return hours;
 }
+
+// Others functions
+
+export function isTheSameWeek(date1: Date, date2: Date): boolean {
+  const date1Monday = getMondayDate(date1)
+  const date2Monday = getMondayDate(date2)
+
+  return getISODate(date1Monday) === getISODate(date2Monday)
+}
